@@ -63,4 +63,15 @@ public class TransactionTest {
 		pam.verify();
 		pam.close();
 	}
+	
+	@Test
+	public void setcred() throws PAMException {
+		Transaction pam = new Transaction("login", TransactionTest.NAME, null);
+		pam.setPassword(TransactionTest.PASSWORD);
+		pam.authenticate();
+		pam.verify();
+		pam.chauthtok();
+		pam.authenticate();
+		pam.close();
+	}
 }

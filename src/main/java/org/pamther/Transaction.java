@@ -146,8 +146,17 @@ public final class Transaction {
 		this.verify(0);
 	}
 
-	public void verify(int flags) throws PAMException {
+	private void verify(int flags) throws PAMException {
 		this.dispatchReturnValue(PamLibrary.INSTANCE.pam_acct_mgmt(
+				this.pamHandlePointer.getPamHandle(), flags));
+	}
+	
+	public void chauthtok() throws PAMException {
+		this.chauthtok(0);
+	}
+	
+	private void chauthtok(int flags) throws PAMException {
+		this.dispatchReturnValue(PamLibrary.INSTANCE.pam_chauthtok(
 				this.pamHandlePointer.getPamHandle(), flags));
 	}
 
