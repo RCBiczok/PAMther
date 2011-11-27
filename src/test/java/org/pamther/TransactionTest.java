@@ -13,15 +13,15 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.github.pamther;
+package org.pamther;
 
-import org.github.pamther.test.TempUser;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.pamther.PAMException;
 import org.pamther.Transaction;
+import org.pamther.test.TempUser;
 
 /**
  * The class {@link PAMService} should ...
