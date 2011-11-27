@@ -15,9 +15,13 @@
  */
 package org.pamther.internal.nativelib.types;
 
-import org.pamther.ConvCallbackHandler;
-import org.pamther.Message;
-import org.pamther.Response;
+import java.io.IOException;
+
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.CallbackHandler;
+import javax.security.auth.callback.PasswordCallback;
+import javax.security.auth.callback.UnsupportedCallbackException;
+
 import org.pamther.internal.nativelib.ReturnCode;
 
 import com.sun.jna.Pointer;
@@ -28,33 +32,51 @@ import com.sun.jna.ptr.PointerByReference;
  */
 public class NativeConvCallbackHandlerImp implements NativeConvCallbackHandler {
 
-	private final ConvCallbackHandler convCallbackHandler;
+	private final CallbackHandler handler;
 
-	public NativeConvCallbackHandlerImp(ConvCallbackHandler convCallbackHandler) {
-		this.convCallbackHandler = convCallbackHandler;
+	private static final MessageDispatcher dispatcher = new MessageDispatcher();
+
+	public NativeConvCallbackHandlerImp(CallbackHandler handler) {
+		this.handler = handler;
 	}
 
-	// @Override
+	@Override
 	public int invoke(int numMsg, PointerByReference msg,
 			PointerByReference resp, Pointer appData) {
-		NativeResponse tmp = new NativeResponse.ByReference();
-		NativeResponse[] reply = (NativeResponse[]) tmp.toArray(numMsg);
 
-		Message[] messages = new Message[reply.length];
-		Response[] responses = new Response[reply.length];
+		Callback[] callbacks = new Callback[numMsg];
 
 		for (int i = 0; i < numMsg; i++) {
-			reply[i].setAutoSynch(true);
-			NativeMessage oneMsg = new NativeMessage(msg.getPointer()
+			// TODO: Test this on Solaris machines.
+			NativeMessage message = new NativeMessage(msg.getPointer()
 					.getPointer(i));
-			
-			messages[i] = new Message(oneMsg);
-			responses[i] = new Response(reply[i]);
-			
-			// reply[i].write();
+			callbacks[i] = NativeConvCallbackHandlerImp.dispatcher.dispatch(
+					message.msg, message.msg_style);
 		}
 
-		this.convCallbackHandler.handle(messages, responses);
+		try {
+			this.handler.handle(callbacks);
+		} catch (IOException e) {
+			// TODO HOW TO HANDLE???
+			e.printStackTrace();
+		} catch (UnsupportedCallbackException e) {
+			// TODO HOW TO HANDLE???
+			e.printStackTrace();
+		}
+		
+		NativeResponse tmp = new NativeResponse.ByReference();
+		NativeResponse[] responses = (NativeResponse[]) tmp.toArray(numMsg);
+		
+		System.out.println(callbacks.length);
+		for (int i = 0; i < callbacks.length; i++) {
+			responses[i].setAutoSynch(true);
+			if(callbacks[i] instanceof PasswordCallback) {
+				final PasswordCallback passwordCallback = (PasswordCallback)callbacks[i];
+				responses[i].resp = new String(passwordCallback.getPassword());
+			}
+		}
+
+		// reply[i].write();
 
 		tmp.write();
 		resp.setValue(tmp.getPointer());

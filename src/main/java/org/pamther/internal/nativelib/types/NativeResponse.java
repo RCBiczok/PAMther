@@ -18,9 +18,10 @@ package org.pamther.internal.nativelib.types;
 import com.sun.jna.Structure;
 
 public class NativeResponse extends Structure {
-	
-	private static final String[] FIELD_ORDER = new String[]{"resp", "resp_retcode"};
-	
+
+	private static final String[] FIELD_ORDER = new String[] { "resp",
+			"resp_retcode" };
+
 	public String resp;
 	public int resp_retcode;
 
@@ -37,11 +38,9 @@ public class NativeResponse extends Structure {
 
 	public static class ByReference extends NativeResponse implements
 			Structure.ByReference {
-
 	};
 
 	public static class ByValue extends NativeResponse implements
 			Structure.ByValue {
-
 	};
 }

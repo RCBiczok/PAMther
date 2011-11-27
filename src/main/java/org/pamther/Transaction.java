@@ -15,6 +15,8 @@
  */
 package org.pamther;
 
+import javax.security.auth.callback.CallbackHandler;
+
 import org.pamther.internal.nativelib.ItemType;
 import org.pamther.internal.nativelib.PamLibrary;
 import org.pamther.internal.nativelib.ReturnCode;
@@ -113,7 +115,7 @@ public final class Transaction {
 	}
 
 	public Transaction(final String service, final String user,
-			final ConvCallbackHandler handler) throws PAMException {
+			final CallbackHandler handler) throws PAMException {
 
 		if (service == null) {
 			throw new NullPointerException("service");
@@ -121,7 +123,7 @@ public final class Transaction {
 			throw new IllegalArgumentException("service can not be empty");
 		}
 
-		Conversation pamConverse = new Conversation();
+		final Conversation pamConverse = new Conversation();
 		if (handler == null) {
 			pamConverse.conv = new NativeConvCallbackHandlerImp(
 					new DefaultConvCallbackHandler(this));

@@ -13,32 +13,30 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.pamther;
+package org.pamther.internal.nativelib.types;
 
-import org.pamther.internal.nativelib.types.NativeMessage;
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.PasswordCallback;
 
-/*
- * A {@link PamMessage} contains textual informations from the underlying PAM
- * module.
- * 
+import org.pamther.internal.nativelib.MsgStyle;
+
+
+/**
  * @author <a href="https://github.com/RCBiczok">Rudolf Biczok</a>
- * @see <a href="http://linux.die.net/man/3/pam_conv">pam_conv</a>
  */
-public final class Message {
-	
-	private NativeMessage nativeMessage;
-	
-	public Message(NativeMessage nativeMessage) {
-		this.nativeMessage = nativeMessage;
+class MessageDispatcher {
+
+	public Callback dispatch(String message, int type) {
+
+		Callback callback = null;
+
+		if (message.equals("Password: ")
+				|| message.equals("Enter new UNIX password: ")
+				|| message.equals("Retype new UNIX password: ")) {
+			callback = new PasswordCallback(message,
+					type == MsgStyle.PAM_PROMPT_ECHO_ON.getCode());
+		}
+
+		return callback;
 	}
-	
-	public String getMessage() {
-		return this.nativeMessage.msg;
-	}
-	
-	//TODO: It is maybe better to replace this with a class hierarchy.
-	public int getStyle() {
-		return this.nativeMessage.msg_style;
-	}
-	
 }

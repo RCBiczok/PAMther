@@ -15,9 +15,11 @@
  */
 package org.pamther;
 
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.CallbackHandler;
+import javax.security.auth.callback.PasswordCallback;
 
-
-public class DefaultConvCallbackHandler implements ConvCallbackHandler {
+public class DefaultConvCallbackHandler implements CallbackHandler {
 
 	private Transaction transaction;
 	
@@ -29,19 +31,14 @@ public class DefaultConvCallbackHandler implements ConvCallbackHandler {
 	 * @see org.pamther.ConvCallbackHandler#handle(org.pamther.Message[], org.pamther.Response[])
 	 */
 	@Override
-	public void handle(Message[] messages, Response[] responses) {
-		for (int i = 0; i < messages.length; i++) {
-			System.out.println(messages[i].getMessage());
-			System.out.println(messages[i].getStyle());
+	public void handle(Callback[] callbacks) {
+		for (Callback callback : callbacks) {
+			System.out.println(callback.getClass());
 			
-			if (messages[i].getMessage().equals("Password: ")) {
-				responses[i].setResponse(transaction.getPassword());
-			}
-			else if (messages[i].getMessage().equals("Enter new UNIX password: ")) {
-				responses[i].setResponse(transaction.getPassword());
-			}
-			else if (messages[i].getMessage().equals("Retype new UNIX password: ")) {
-				responses[i].setResponse(transaction.getPassword());
+			if (callback instanceof PasswordCallback) {
+				PasswordCallback passwordCallback = (PasswordCallback)callback;
+				System.out.println(passwordCallback.getPrompt());
+				passwordCallback.setPassword(transaction.getPassword().toCharArray());
 			}
 		}
 	}

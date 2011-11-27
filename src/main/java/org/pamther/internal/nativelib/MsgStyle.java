@@ -18,7 +18,7 @@ package org.pamther.internal.nativelib;
 /**
  * @author   biczok
  */
-enum MsgStyle {
+public enum MsgStyle {
 
 	PAM_PROMPT_ECHO_OFF(1),
 
