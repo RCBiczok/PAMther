@@ -47,7 +47,7 @@ public class NativeConvCallbackHandlerImp implements NativeConvCallbackHandler {
 			reply[i].setAutoSynch(true);
 			NativeMessage oneMsg = new NativeMessage(msg.getPointer()
 					.getPointer(i));
-
+			
 			messages[i] = new Message(oneMsg);
 			responses[i] = new Response(reply[i]);
 			

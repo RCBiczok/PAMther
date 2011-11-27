@@ -31,7 +31,16 @@ public class DefaultConvCallbackHandler implements ConvCallbackHandler {
 	@Override
 	public void handle(Message[] messages, Response[] responses) {
 		for (int i = 0; i < messages.length; i++) {
+			System.out.println(messages[i].getMessage());
+			System.out.println(messages[i].getStyle());
+			
 			if (messages[i].getMessage().equals("Password: ")) {
+				responses[i].setResponse(transaction.getPassword());
+			}
+			else if (messages[i].getMessage().equals("Enter new UNIX password: ")) {
+				responses[i].setResponse(transaction.getPassword());
+			}
+			else if (messages[i].getMessage().equals("Retype new UNIX password: ")) {
 				responses[i].setResponse(transaction.getPassword());
 			}
 		}
