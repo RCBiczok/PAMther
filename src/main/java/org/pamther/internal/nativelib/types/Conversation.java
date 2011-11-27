@@ -15,25 +15,26 @@
  */
 package org.pamther.internal.nativelib.types;
 
-import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
 
 public class Conversation extends Structure {
 
-	private static final String[] FIELD_ORDER = new String[] { "conv",
-			"appdata_ptr" };
+	private static final String[] FIELD_ORDER = new String[] { "conv" };
 
 	public NativeConvCallbackHandler conv;
-	public Pointer appdata_ptr;
+
+	/*
+	 * No need for this attribute 
+	 * public Pointer appdata_ptr;
+	 */
 
 	public Conversation() {
-		this(null, null);
+		this(null);
 	}
 
-	public Conversation(NativeConvCallbackHandler convCallBack, Pointer appdata_ptr) {
+	public Conversation(NativeConvCallbackHandler convCallBack) {
 		super();
 		this.conv = convCallBack;
-		this.appdata_ptr = appdata_ptr;
 		this.setFieldOrder(Conversation.FIELD_ORDER);
 	}
 
