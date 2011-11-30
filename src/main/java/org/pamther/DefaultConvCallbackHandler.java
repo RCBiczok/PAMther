@@ -40,6 +40,7 @@ public class DefaultConvCallbackHandler implements CallbackHandler {
 				System.out.println(passwordCallback.getPrompt());
 				passwordCallback.setPassword(transaction.getPassword().toCharArray());
 			}
+			
 		}
 	}
 

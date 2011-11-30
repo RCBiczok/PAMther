@@ -16,6 +16,7 @@
 package org.pamther.internal.nativelib.types;
 
 import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.NameCallback;
 import javax.security.auth.callback.PasswordCallback;
 
 import org.pamther.internal.nativelib.MsgStyle;
@@ -35,6 +36,9 @@ class MessageDispatcher {
 				|| message.equals("Retype new UNIX password: ")) {
 			callback = new PasswordCallback(message,
 					type == MsgStyle.PAM_PROMPT_ECHO_ON.getCode());
+		}
+		else if (message.equals("login: ")) {
+			callback = new NameCallback(message);
 		}
 
 		return callback;

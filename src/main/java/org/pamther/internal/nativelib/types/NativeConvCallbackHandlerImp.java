@@ -73,6 +73,7 @@ public class NativeConvCallbackHandlerImp implements NativeConvCallbackHandler {
 			if(callbacks[i] instanceof PasswordCallback) {
 				final PasswordCallback passwordCallback = (PasswordCallback)callbacks[i];
 				responses[i].resp = new String(passwordCallback.getPassword());
+				passwordCallback.clearPassword();
 			}
 		}
 
