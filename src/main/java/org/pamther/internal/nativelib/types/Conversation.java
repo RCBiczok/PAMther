@@ -21,7 +21,7 @@ public class Conversation extends Structure {
 
 	private static final String[] FIELD_ORDER = new String[] { "conv" };
 
-	public NativeConvCallbackHandler conv;
+	public NativeCallbackHandler conv;
 
 	/*
 	 * No need for this attribute 
@@ -32,9 +32,9 @@ public class Conversation extends Structure {
 		this(null);
 	}
 
-	public Conversation(NativeConvCallbackHandler convCallBack) {
-		super();
-		this.conv = convCallBack;
+	public Conversation(NativeCallbackHandler nativeCallbackHandler) {
+		super(new PermanentMemory(34));
+		this.conv = nativeCallbackHandler;
 		this.setFieldOrder(Conversation.FIELD_ORDER);
 	}
 

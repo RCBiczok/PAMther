@@ -15,11 +15,19 @@
  */
 package org.pamther.internal.nativelib.types;
 
+import javax.security.auth.callback.CallbackHandler;
+
 import com.sun.jna.Callback;
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.PointerByReference;
 
-public interface NativeConvCallbackHandler extends Callback {
-	int invoke(int numMsg, PointerByReference msg, PointerByReference resp,
+public interface NativeCallbackHandler extends Callback {
+	
+	int callback(int numMsg, PointerByReference msg, PointerByReference resp,
 			Pointer appData);
+
+	CallbackHandler getCallbackHandler();
+
+	void setCallbackHandler(CallbackHandler handler);
+
 };

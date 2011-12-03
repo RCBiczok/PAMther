@@ -22,7 +22,7 @@ import org.pamther.internal.nativelib.PamLibrary;
 import org.pamther.internal.nativelib.ReturnCode;
 import org.pamther.internal.nativelib.types.Conversation;
 import org.pamther.internal.nativelib.types.HandleByReference;
-import org.pamther.internal.nativelib.types.NativeConvCallbackHandlerImp;
+import org.pamther.internal.nativelib.types.NativeCallbackHandlerImp;
 
 /**
  * The {@link Transaction} encapsulates a PAM handle returned by pam_start and
@@ -56,7 +56,8 @@ public final class Transaction {
 
 	private boolean open = true;
 
-	private final Conversation pamConverse = new Conversation();
+	private final Conversation pamConverse = new Conversation(
+			new NativeCallbackHandlerImp());
 
 	/**
 	 * Points the internal PAM handle.
@@ -129,11 +130,10 @@ public final class Transaction {
 			throw new IllegalArgumentException("service can not be empty");
 		}
 
-		if (handler == null) {
-			this.pamConverse.conv = new NativeConvCallbackHandlerImp(
-					new DefaultCallbackHandler(this));
+		if (handler == null && this.pamConverse.conv.getCallbackHandler() == null) {
+			this.pamConverse.conv.setCallbackHandler(new DefaultCallbackHandler(this));
 		} else {
-			this.pamConverse.conv = new NativeConvCallbackHandlerImp(handler);
+			this.pamConverse.conv.setCallbackHandler(handler);
 		}
 
 		this.dispatchReturnValue(PamLibrary.INSTANCE.pam_start(service, user,

@@ -30,20 +30,24 @@ import com.sun.jna.ptr.PointerByReference;
 /**
  * Some doc.
  */
-public class NativeConvCallbackHandlerImp implements NativeConvCallbackHandler {
+public class NativeCallbackHandlerImp implements NativeCallbackHandler {
 
-	private final CallbackHandler handler;
+	private CallbackHandler handler;
 
 	private static final MessageDispatcher DISPATCHER = new MessageDispatcher();
 
 	private static final NativeResponse DUMMY_RESPONSE = new NativeResponse();
 
-	public NativeConvCallbackHandlerImp(CallbackHandler handler) {
+	public CallbackHandler getCallbackHandler() {
+		return this.handler;
+	}
+
+	public void setCallbackHandler(CallbackHandler handler) {
 		this.handler = handler;
 	}
 
 	@Override
-	public int invoke(int numMsg, PointerByReference msg,
+	public int callback(int numMsg, PointerByReference msg,
 			PointerByReference resp, Pointer appData) {
 
 		Callback[] callbacks = new Callback[numMsg];
@@ -52,7 +56,7 @@ public class NativeConvCallbackHandlerImp implements NativeConvCallbackHandler {
 			// TODO: Test this on Solaris machines.
 			NativeMessage message = new NativeMessage(msg.getPointer()
 					.getPointer(i));
-			callbacks[i] = NativeConvCallbackHandlerImp.DISPATCHER.dispatch(
+			callbacks[i] = NativeCallbackHandlerImp.DISPATCHER.dispatch(
 					message.msg, message.msg_style);
 		}
 
