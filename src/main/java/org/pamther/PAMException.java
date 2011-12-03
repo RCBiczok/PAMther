@@ -15,6 +15,8 @@
  */
 package org.pamther;
 
+import javax.security.auth.login.LoginException;
+
 /**
  * Library-specific exception class. This is typically thrown whenever a native
  * PAM function returns a value not similar to <code>PAM_SUCCESS</code>.
@@ -24,7 +26,7 @@ package org.pamther;
  * 
  * @author <a href="https://github.com/RCBiczok">Rudolf Biczok</a>
  */
-public class PAMException extends Exception {
+public class PAMException extends LoginException {
 
 	/**
 	 * SVUID.
