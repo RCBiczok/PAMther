@@ -19,8 +19,6 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.pamther.PAMException;
-import org.pamther.Transaction;
 import org.pamther.test.TempUser;
 
 /**
@@ -53,6 +51,7 @@ public class TransactionTest {
 		Assert.assertEquals("login", pam.getService());
 		pam.setService("su");
 		Assert.assertEquals("su", pam.getService());
+		pam.close();
 	}
 
 	@Test
@@ -62,8 +61,9 @@ public class TransactionTest {
 		pam.authenticate();
 		pam.verify();
 		pam.close();
+		System.gc();
 	}
-	
+
 	@Test
 	public void setcred() throws PAMException {
 		Transaction pam = new Transaction("login", TransactionTest.NAME, null);
@@ -73,5 +73,23 @@ public class TransactionTest {
 		pam.chauthtok();
 		pam.authenticate();
 		pam.close();
+	}
+	
+	@Test
+	public void beCollectableByGC() throws PAMException {
+		Transaction pam = new Transaction("login", TransactionTest.NAME, null);
+		pam.setPassword(TransactionTest.PASSWORD);
+		pam.authenticate();
+		pam.verify();
+		pam.close();
+		
+		pam = new Transaction("login", TransactionTest.NAME, null);
+		pam.setPassword(TransactionTest.PASSWORD);
+		pam.authenticate();
+		pam.verify();
+		pam.close();
+		pam = null;
+		
+		System.gc();
 	}
 }

@@ -79,7 +79,7 @@ public class TempUser {
 	 */
 	public TempUser(String name, String password) {
 		if (TempUser.CLIB.geteuid() != 0)
-			throw new RuntimeException("Caller must be root user");
+			throw new RuntimeException("Caller must be root");
 		this.name = name;
 		this.password = password;
 	}

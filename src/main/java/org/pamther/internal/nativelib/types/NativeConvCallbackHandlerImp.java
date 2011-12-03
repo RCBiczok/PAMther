@@ -34,7 +34,9 @@ public class NativeConvCallbackHandlerImp implements NativeConvCallbackHandler {
 
 	private final CallbackHandler handler;
 
-	private static final MessageDispatcher dispatcher = new MessageDispatcher();
+	private static final MessageDispatcher DISPATCHER = new MessageDispatcher();
+
+	private static final NativeResponse DUMMY_RESPONSE = new NativeResponse();
 
 	public NativeConvCallbackHandlerImp(CallbackHandler handler) {
 		this.handler = handler;
@@ -50,7 +52,7 @@ public class NativeConvCallbackHandlerImp implements NativeConvCallbackHandler {
 			// TODO: Test this on Solaris machines.
 			NativeMessage message = new NativeMessage(msg.getPointer()
 					.getPointer(i));
-			callbacks[i] = NativeConvCallbackHandlerImp.dispatcher.dispatch(
+			callbacks[i] = NativeConvCallbackHandlerImp.DISPATCHER.dispatch(
 					message.msg, message.msg_style);
 		}
 
@@ -63,26 +65,27 @@ public class NativeConvCallbackHandlerImp implements NativeConvCallbackHandler {
 			// TODO HOW TO HANDLE???
 			e.printStackTrace();
 		}
-		
-		NativeResponse tmp = new NativeResponse.ByReference();
-		NativeResponse[] responses = (NativeResponse[]) tmp.toArray(numMsg);
-		
-		System.out.println(callbacks.length);
+
+		final NativeResponse[] responses = (NativeResponse[]) new NativeResponse.ByReference(
+				new PermanentMemory(DUMMY_RESPONSE.size() * numMsg))
+				.toArray(numMsg);
 		for (int i = 0; i < callbacks.length; i++) {
-			responses[i].setAutoSynch(true);
-			if(callbacks[i] instanceof PasswordCallback) {
-				final PasswordCallback passwordCallback = (PasswordCallback)callbacks[i];
-				responses[i].resp = new String(passwordCallback.getPassword());
+			if (callbacks[i] instanceof PasswordCallback) {
+				final PasswordCallback passwordCallback = (PasswordCallback) callbacks[i];
+				PermanentMemory password = new PermanentMemory(
+						passwordCallback.getPassword().length * Character.SIZE);
+				for (int j = 0; j < passwordCallback.getPassword().length; j++) {
+					password.setChar(j, passwordCallback.getPassword()[j]);
+				}
+				responses[i].resp = password;
 				passwordCallback.clearPassword();
 			}
+			responses[i].setAutoSynch(true);
+			responses[i].write();
 		}
 
-		// reply[i].write();
-
-		tmp.write();
-		resp.setValue(tmp.getPointer());
+		resp.setValue(responses[0].getPointer());
 		return ReturnCode.PAM_SUCCESS.getCode();
 
 	}
-
 };

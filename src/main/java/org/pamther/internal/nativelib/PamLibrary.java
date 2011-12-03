@@ -20,6 +20,7 @@ import org.pamther.internal.nativelib.types.Handle;
 import org.pamther.internal.nativelib.types.HandleByReference;
 
 import com.sun.jna.Library;
+import com.sun.jna.Memory;
 import com.sun.jna.Native;
 
 /**

@@ -19,17 +19,14 @@ import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.PasswordCallback;
 
-public class DefaultConvCallbackHandler implements CallbackHandler {
+public class DefaultCallbackHandler implements CallbackHandler {
 
 	private Transaction transaction;
 	
-	public DefaultConvCallbackHandler(Transaction transaction)  {
+	public DefaultCallbackHandler(Transaction transaction)  {
 		this.transaction = transaction;
 	}
 	
-	/**
-	 * @see org.pamther.ConvCallbackHandler#handle(org.pamther.Message[], org.pamther.Response[])
-	 */
 	@Override
 	public void handle(Callback[] callbacks) {
 		for (Callback callback : callbacks) {

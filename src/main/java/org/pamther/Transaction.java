@@ -42,12 +42,22 @@ public final class Transaction {
 	 *      files</a>
 	 */
 	public static final String DEFAULT_SERVICE = "login";
-	
-	//TODO REMOV THIS !!!!
+
+	// TODO REMOV THIS !!!!
 	private String password;
 
+	/**
+	 * Holds the value returned from the recently executed PAM function.
+	 * 
+	 * It will be used later when the {@link Transaction#close()} method is
+	 * called.
+	 */
+	private int state;
+
+	private boolean open = true;
+
 	private final Conversation pamConverse = new Conversation();
-	
+
 	/**
 	 * Points the internal PAM handle.
 	 */
@@ -80,7 +90,7 @@ public final class Transaction {
 		this.setStringItem(ItemType.PAM_SERVICE, service);
 	}
 
-	//TODO REMOVE THIS !!!!!
+	// TODO REMOVE THIS !!!!!
 	public String getPassword() {
 		return this.password;
 	}
@@ -92,14 +102,6 @@ public final class Transaction {
 	public String getUser() {
 		return this.getStringItem(ItemType.PAM_USER);
 	}
-
-	/**
-	 * Holds the value returned from the recently executed PAM function.
-	 * 
-	 * It will be used later when the {@link Transaction#close()} method is
-	 * called.
-	 */
-	private int status;
 
 	/**
 	 * Constructs a new PAM transaction with {@link Transaction#DEFAULT_SERVICE}
@@ -128,14 +130,14 @@ public final class Transaction {
 		}
 
 		if (handler == null) {
-			pamConverse.conv = new NativeConvCallbackHandlerImp(
-					new DefaultConvCallbackHandler(this));
+			this.pamConverse.conv = new NativeConvCallbackHandlerImp(
+					new DefaultCallbackHandler(this));
 		} else {
-			pamConverse.conv = new NativeConvCallbackHandlerImp(handler);
+			this.pamConverse.conv = new NativeConvCallbackHandlerImp(handler);
 		}
 
 		this.dispatchReturnValue(PamLibrary.INSTANCE.pam_start(service, user,
-				pamConverse, this.pamHandlePointer));
+				this.pamConverse, this.pamHandlePointer));
 	}
 
 	public void authenticate() throws PAMException {
@@ -155,19 +157,22 @@ public final class Transaction {
 		this.dispatchReturnValue(PamLibrary.INSTANCE.pam_acct_mgmt(
 				this.pamHandlePointer.getPamHandle(), flags));
 	}
-	
+
 	public void chauthtok() throws PAMException {
 		this.chauthtok(0);
 	}
-	
+
 	private void chauthtok(int flags) throws PAMException {
 		this.dispatchReturnValue(PamLibrary.INSTANCE.pam_chauthtok(
 				this.pamHandlePointer.getPamHandle(), flags));
 	}
 
 	public void close() throws PAMException {
-		this.dispatchReturnValue(PamLibrary.INSTANCE.pam_end(
-				pamHandlePointer.getPamHandle(), this.status));
+		if (this.open) {
+			this.dispatchReturnValue(PamLibrary.INSTANCE.pam_end(
+					pamHandlePointer.getPamHandle(), this.state));
+			this.open = false;
+		}
 	}
 
 	@Override
@@ -180,17 +185,17 @@ public final class Transaction {
 	}
 
 	private void dispatchReturnValue(final int retVal) throws PAMException {
-		this.status = retVal;
-		if (this.status != ReturnCode.PAM_SUCCESS.getCode()) {
-			if (this.status == ReturnCode.PAM_USER_UNKNOWN.getCode()) {
+		this.state = retVal;
+		if (this.state != ReturnCode.PAM_SUCCESS.getCode()) {
+			if (this.state == ReturnCode.PAM_USER_UNKNOWN.getCode()) {
 				throw new PAMException("Failed to find user" + this.getUser()
-						+ " with error: " + this.status);
+						+ " with error: " + this.state);
 			} else {
 				throw new PAMException(
 						"Failed to authenticate for an unknown error: "
 								+ PamLibrary.INSTANCE.pam_strerror(
 										pamHandlePointer.getPamHandle(),
-										this.status));
+										this.state));
 			}
 		}
 	}

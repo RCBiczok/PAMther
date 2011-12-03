@@ -15,6 +15,7 @@
  */
 package org.pamther.internal.nativelib.types;
 
+import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
 
 public class NativeResponse extends Structure {
@@ -22,15 +23,20 @@ public class NativeResponse extends Structure {
 	private static final String[] FIELD_ORDER = new String[] { "resp",
 			"resp_retcode" };
 
-	public String resp;
+	public Pointer resp;
 	public int resp_retcode;
 
 	public NativeResponse() {
 		super();
 		this.setFieldOrder(NativeResponse.FIELD_ORDER);
 	}
+	
+	public NativeResponse(Pointer p) {
+		super(p);
+		this.setFieldOrder(NativeResponse.FIELD_ORDER);
+	}
 
-	public NativeResponse(String resp, int resp_retcode) {
+	public NativeResponse(Pointer resp, int resp_retcode) {
 		this();
 		this.resp = resp;
 		this.resp_retcode = resp_retcode;
@@ -38,6 +44,13 @@ public class NativeResponse extends Structure {
 
 	public static class ByReference extends NativeResponse implements
 			Structure.ByReference {
+		public ByReference(Pointer p) {
+			super(p);
+		}
+		
+		public ByReference() {
+			super();
+		}
 	};
 
 	public static class ByValue extends NativeResponse implements
