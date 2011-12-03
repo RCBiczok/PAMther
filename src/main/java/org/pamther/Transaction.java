@@ -43,8 +43,11 @@ public final class Transaction {
 	 */
 	public static final String DEFAULT_SERVICE = "login";
 	
+	//TODO REMOV THIS !!!!
 	private String password;
 
+	private final Conversation pamConverse = new Conversation();
+	
 	/**
 	 * Points the internal PAM handle.
 	 */
@@ -77,6 +80,7 @@ public final class Transaction {
 		this.setStringItem(ItemType.PAM_SERVICE, service);
 	}
 
+	//TODO REMOVE THIS !!!!!
 	public String getPassword() {
 		return this.password;
 	}
@@ -123,7 +127,6 @@ public final class Transaction {
 			throw new IllegalArgumentException("service can not be empty");
 		}
 
-		final Conversation pamConverse = new Conversation();
 		if (handler == null) {
 			pamConverse.conv = new NativeConvCallbackHandlerImp(
 					new DefaultConvCallbackHandler(this));
