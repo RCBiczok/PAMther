@@ -31,14 +31,21 @@ import org.pamther.test.TempUser;
 public class TransactionTest {
 
 	private static final String NAME = "pamtest";
-	private static final String PASSWORD = "mop";
+	private static final String OLD_PASSWORD = "mop";
+	private static final String NEW_PASSWORD = "new_mop";
 	private static TempUser user;
+	
+	private static DefaultCallbackHandler handler;
 
 	@BeforeClass
 	public static void createUser() throws LoginException {
 		TransactionTest.user = new TempUser(TransactionTest.NAME,
-				TransactionTest.PASSWORD);
+				TransactionTest.OLD_PASSWORD);
 		TransactionTest.user.create();
+		handler = new DefaultCallbackHandler();
+		handler.setName(TransactionTest.NAME);
+		handler.setOldPassword(TransactionTest.OLD_PASSWORD.toCharArray());
+		handler.setNewPassword(TransactionTest.NEW_PASSWORD.toCharArray());
 	}
 
 	@AfterClass
@@ -49,7 +56,7 @@ public class TransactionTest {
 
 	@Test
 	public void haveAService() throws LoginException {
-		Transaction pam = new Transaction();
+		Transaction pam = new Transaction("login", TransactionTest.NAME, handler);
 		Assert.assertEquals("login", pam.getService());
 		pam.setService("su");
 		Assert.assertEquals("su", pam.getService());
@@ -58,8 +65,7 @@ public class TransactionTest {
 
 	@Test
 	public void login() throws LoginException {
-		Transaction pam = new Transaction("login", TransactionTest.NAME, null);
-		pam.setPassword(TransactionTest.PASSWORD);
+		Transaction pam = new Transaction("login", TransactionTest.NAME, handler);
 		pam.authenticate();
 		pam.verify();
 		pam.close();
@@ -68,30 +74,35 @@ public class TransactionTest {
 
 	@Test
 	public void setcred() throws LoginException {
-		Transaction pam = new Transaction("login", TransactionTest.NAME, null);
-		pam.setPassword(TransactionTest.PASSWORD);
+		Transaction pam = new Transaction("login", TransactionTest.NAME, handler);
 		pam.authenticate();
 		pam.verify();
 		pam.chauthtok();
+		try {
 		pam.authenticate();
-		pam.close();
+		}
+		catch (LoginException e) {
+			return;
+		}
+		finally {
+			pam.close();
+		}
+		Assert.fail();
 	}
 	
-	@Test
-	public void beCollectableByGC() throws LoginException {
-		Transaction pam = new Transaction("login", TransactionTest.NAME, null);
-		pam.setPassword(TransactionTest.PASSWORD);
-		pam.authenticate();
-		pam.verify();
-		pam.close();
-		
-		pam = new Transaction("login", TransactionTest.NAME, null);
-		pam.setPassword(TransactionTest.PASSWORD);
-		pam.authenticate();
-		pam.verify();
-		pam.close();
-		pam = null;
-		
-		System.gc();
-	}
+//	@Test
+//	public void beCollectableByGC() throws LoginException {
+//		Transaction pam = new Transaction("login", TransactionTest.NAME, handler);
+//		pam.authenticate();
+//		pam.verify();
+//		pam.close();
+//		
+//		pam = new Transaction("login", TransactionTest.NAME, handler);
+//		pam.authenticate();
+//		pam.verify();
+//		pam.close();
+//		pam = null;
+//		
+//		System.gc();
+//	}
 }

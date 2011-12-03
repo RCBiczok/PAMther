@@ -48,9 +48,6 @@ public final class Transaction {
 	 */
 	public static final String DEFAULT_SERVICE = "login";
 
-	// TODO REMOV THIS !!!!
-	private String password;
-
 	/**
 	 * Holds the value returned from the recently executed PAM function.
 	 * 
@@ -87,7 +84,7 @@ public final class Transaction {
 	 * Sets the name of the used service configuration.
 	 * 
 	 * @param service
-	 *            the name of the service configuration.
+	 *            the name of the service configuration
 	 * 
 	 * @see <a href="http://linux.die.net/man/8/pam.d">PAM configuration
 	 *      files</a>
@@ -96,17 +93,12 @@ public final class Transaction {
 		this.setStringItem(ItemType.PAM_SERVICE, service);
 	}
 
-	// TODO REMOVE THIS !!!!!
-	public String getPassword() {
-		return this.password;
-	}
-
-	public void setPassword(final String password) {
-		this.password = password;
-	}
-
 	public String getUser() {
 		return this.getStringItem(ItemType.PAM_USER);
+	}
+
+	public void setUser(String user) {
+		this.setStringItem(ItemType.PAM_SERVICE, user);
 	}
 
 	/**
@@ -118,14 +110,6 @@ public final class Transaction {
 	 *             href="http://linux.die.net/man/3/pam_start">pam_start</a>.
 	 * @see {@link Transaction#Transaction(String)}
 	 */
-	public Transaction() throws LoginException {
-		this(DEFAULT_SERVICE);
-	}
-
-	public Transaction(String serviceName) throws LoginException {
-		this(serviceName, null, null);
-	}
-
 	public Transaction(final String service, final String user,
 			final CallbackHandler handler) throws LoginException {
 
@@ -134,14 +118,11 @@ public final class Transaction {
 		} else if (service.length() == 0) {
 			throw new IllegalArgumentException("service can not be empty");
 		}
-
-		if (handler == null
-				&& this.pamConverse.conv.getCallbackHandler() == null) {
-			this.pamConverse.conv
-					.setCallbackHandler(new DefaultCallbackHandler(this));
-		} else {
-			this.pamConverse.conv.setCallbackHandler(handler);
+		if (handler == null) {
+			throw new NullPointerException("handler");
 		}
+
+		this.pamConverse.conv.setCallbackHandler(handler);
 
 		this.dispatchReturnValue(PAMLibrary.INSTANCE.pam_start(service, user,
 				this.pamConverse, this.pamHandlePointer));
@@ -151,7 +132,7 @@ public final class Transaction {
 		this.authenticate(0);
 	}
 
-	public void authenticate(int flags) throws LoginException {
+	private void authenticate(int flags) throws LoginException {
 		this.dispatchReturnValue(PAMLibrary.INSTANCE.pam_authenticate(
 				this.pamHandlePointer.getPamHandle(), flags));
 	}
@@ -199,7 +180,7 @@ public final class Transaction {
 					PAMLibrary.INSTANCE.pam_strerror(
 							pamHandlePointer.getPamHandle(), this.state),
 					this.state);
-			switch (ReturnCode.valueOf("" + retVal)) {
+			switch (ReturnCode.dispatch(retVal)) {
 			case PAM_USER_UNKNOWN:
 				throw new AccountNotFoundException(message);
 			case PAM_CRED_EXPIRED:

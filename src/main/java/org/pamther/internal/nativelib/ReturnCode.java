@@ -91,4 +91,18 @@ public enum ReturnCode {
 	public int getCode() {
 		return this.code;
 	}
+
+	/**
+	 * @param retVal
+	 * @return
+	 */
+	public static ReturnCode dispatch(int code) {
+		for(ReturnCode returnCode : values()) {
+			if(returnCode.getCode() == code) {
+				return returnCode;
+			}
+		}
+		
+		return null;
+	}
 }

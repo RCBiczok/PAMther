@@ -26,13 +26,26 @@ import org.pamther.Transaction;
 
 public class PAMLoginModule implements LoginModule {
 	private static final String SERVICE_NAME_OPTION = "serviceName";
-	private Subject subject;
 	private CallbackHandler callbackHandler;
-	private Map<String, ?> sharedState;
 	private Map<String, ?> options;
+
+	private Transaction transaction;
+
+	public boolean login(String service, String userName, char[] password)
+			throws LoginException {
+		this.transaction = null;
+		return true;
+	}
+
+	public boolean changeCredential(String service, String userName,
+			char[] oldPassword, char[] newPassword) throws LoginException {
+		this.transaction = null;
+		return true;
+	}
 
 	@Override
 	public boolean abort() throws LoginException {
+		this.transaction = null;
 		return true;
 	}
 
@@ -43,23 +56,24 @@ public class PAMLoginModule implements LoginModule {
 
 	@Override
 	public boolean login() throws LoginException {
-		final Transaction transaction = new Transaction(
-				(String) options.get(SERVICE_NAME_OPTION), null, callbackHandler);
+		transaction = new Transaction(
+				(String) options.get(SERVICE_NAME_OPTION), null,
+				callbackHandler);
 		transaction.authenticate();
+		transaction.chauthtok();
 		return true;
 	}
 
 	@Override
 	public boolean logout() throws LoginException {
+		this.transaction = null;
 		return true;
 	}
 
 	@Override
 	public void initialize(Subject subject, CallbackHandler callbackHandler,
 			Map<String, ?> sharedState, Map<String, ?> options) {
-		this.subject = subject;
 		this.callbackHandler = callbackHandler;
-		this.sharedState = sharedState;
 		this.options = options;
 	}
 

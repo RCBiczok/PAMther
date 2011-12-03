@@ -17,28 +17,92 @@ package org.pamther;
 
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
+import javax.security.auth.callback.NameCallback;
 import javax.security.auth.callback.PasswordCallback;
 
 public class DefaultCallbackHandler implements CallbackHandler {
 
-	private Transaction transaction;
-	
-	public DefaultCallbackHandler(Transaction transaction)  {
-		this.transaction = transaction;
-	}
-	
+	private String name;
+
+	private char[] oldPassword;
+	private char[] newPassword;
+
 	@Override
 	public void handle(Callback[] callbacks) {
 		for (Callback callback : callbacks) {
-			System.out.println(callback.getClass());
-			
-			if (callback instanceof PasswordCallback) {
-				PasswordCallback passwordCallback = (PasswordCallback)callback;
-				System.out.println(passwordCallback.getPrompt());
-				passwordCallback.setPassword(transaction.getPassword().toCharArray());
+			if (callback instanceof NameCallback) {
+				NameCallback nameCallback = (NameCallback) callback;
+				System.out.println(nameCallback.getPrompt());
+				nameCallback.setName(name);
 			}
-			
+
+			if (callback instanceof PasswordCallback) {
+				PasswordCallback passwordCallback = (PasswordCallback) callback;
+				if (passwordCallback.getPrompt().contains("new UNIX")) {
+					passwordCallback.setPassword(this.newPassword);
+				} else {
+					passwordCallback.setPassword(this.oldPassword);
+				}
+			}
+
 		}
+	}
+
+	/**
+	 * The name property.
+	 * 
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * The name property.
+	 * 
+	 * @param name
+	 *            the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * The oldPassword property.
+	 * 
+	 * @return the oldPassword
+	 */
+	public char[] getOldPassword() {
+		return oldPassword;
+	}
+
+	/**
+	 * The oldPassword property.
+	 * 
+	 * @param oldPassword
+	 *            the oldPassword to set
+	 */
+	public void setOldPassword(char[] oldPassword) {
+		this.oldPassword = oldPassword;
+	}
+
+	/**
+	 * The newPassword property.
+	 * 
+	 * @return the newPassword
+	 */
+	public char[] getNewPassword() {
+		return newPassword;
+	}
+
+	/**
+	 * The newPassword property.
+	 * 
+	 * @param newPassword
+	 *            the newPassword to set
+	 */
+	public void setNewPassword(char[] newPassword) {
+		this.newPassword = newPassword;
 	}
 
 }
