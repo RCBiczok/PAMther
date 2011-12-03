@@ -30,14 +30,14 @@
 	<properties>
 		<java.version>1.6</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<github.account>RCBiczok</github.account>
+		<bitbucket.account>RCBiczok</bitbucket.account>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>net.java.dev.jna</groupId>
 			<artifactId>jna</artifactId>
-			<version>3.2.7</version>
+			<version>3.2.3</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -132,9 +132,9 @@
 	</licenses>
 
 	<scm>
-		<connection>scm:git:git://github.com/${github.account}/${project.name}.git</connection>
-		<developerConnection>scm:git:git@github.com:${github.account}/${project.name}.git</developerConnection>
-		<url>https://${github.account}@github.com/${github.account}/${project.name}.git</url>
+		<connection>scm:hg:http://bitbucket.org/${bitbucket.account}/${project.name}</connection>
+		<developerConnection>scm:hg:https://bitbucket.org/${bitbucket.account}/${project.name}</developerConnection>
+		<url>http://bitbucket.org/${bitbucket.account}/${project.name}</url>
 	</scm>
 
 </project>
