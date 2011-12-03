@@ -28,9 +28,9 @@ import com.sun.jna.Native;
  * 
  * @author <a href="https://github.com/RCBiczok">Rudolf Biczok</a>
  */
-public interface PamLibrary extends Library {
-	public static final PamLibrary INSTANCE = (PamLibrary) Native.loadLibrary(
-			"pam", PamLibrary.class);
+public interface PAMLibrary extends Library {
+	public static final PAMLibrary INSTANCE = (PAMLibrary) Native.loadLibrary(
+			"pam", PAMLibrary.class);
 
 	int pam_start(String service, String user, Conversation pamConverse,
 			HandleByReference pamHandle);

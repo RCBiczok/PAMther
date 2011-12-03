@@ -16,9 +16,14 @@
 package org.pamther;
 
 import javax.security.auth.callback.CallbackHandler;
+import javax.security.auth.login.AccountNotFoundException;
+import javax.security.auth.login.CredentialExpiredException;
+import javax.security.auth.login.CredentialNotFoundException;
+import javax.security.auth.login.FailedLoginException;
+import javax.security.auth.login.LoginException;
 
 import org.pamther.internal.nativelib.ItemType;
-import org.pamther.internal.nativelib.PamLibrary;
+import org.pamther.internal.nativelib.PAMLibrary;
 import org.pamther.internal.nativelib.ReturnCode;
 import org.pamther.internal.nativelib.types.Conversation;
 import org.pamther.internal.nativelib.types.HandleByReference;
@@ -113,16 +118,16 @@ public final class Transaction {
 	 *             href="http://linux.die.net/man/3/pam_start">pam_start</a>.
 	 * @see {@link Transaction#Transaction(String)}
 	 */
-	public Transaction() throws PAMException {
+	public Transaction() throws LoginException {
 		this(DEFAULT_SERVICE);
 	}
 
-	public Transaction(String serviceName) throws PAMException {
+	public Transaction(String serviceName) throws LoginException {
 		this(serviceName, null, null);
 	}
 
 	public Transaction(final String service, final String user,
-			final CallbackHandler handler) throws PAMException {
+			final CallbackHandler handler) throws LoginException {
 
 		if (service == null) {
 			throw new NullPointerException("service");
@@ -130,46 +135,48 @@ public final class Transaction {
 			throw new IllegalArgumentException("service can not be empty");
 		}
 
-		if (handler == null && this.pamConverse.conv.getCallbackHandler() == null) {
-			this.pamConverse.conv.setCallbackHandler(new DefaultCallbackHandler(this));
+		if (handler == null
+				&& this.pamConverse.conv.getCallbackHandler() == null) {
+			this.pamConverse.conv
+					.setCallbackHandler(new DefaultCallbackHandler(this));
 		} else {
 			this.pamConverse.conv.setCallbackHandler(handler);
 		}
 
-		this.dispatchReturnValue(PamLibrary.INSTANCE.pam_start(service, user,
+		this.dispatchReturnValue(PAMLibrary.INSTANCE.pam_start(service, user,
 				this.pamConverse, this.pamHandlePointer));
 	}
 
-	public void authenticate() throws PAMException {
+	public void authenticate() throws LoginException {
 		this.authenticate(0);
 	}
 
-	public void authenticate(int flags) throws PAMException {
-		this.dispatchReturnValue(PamLibrary.INSTANCE.pam_authenticate(
+	public void authenticate(int flags) throws LoginException {
+		this.dispatchReturnValue(PAMLibrary.INSTANCE.pam_authenticate(
 				this.pamHandlePointer.getPamHandle(), flags));
 	}
 
-	public void verify() throws PAMException {
+	public void verify() throws LoginException {
 		this.verify(0);
 	}
 
-	private void verify(int flags) throws PAMException {
-		this.dispatchReturnValue(PamLibrary.INSTANCE.pam_acct_mgmt(
+	private void verify(int flags) throws LoginException {
+		this.dispatchReturnValue(PAMLibrary.INSTANCE.pam_acct_mgmt(
 				this.pamHandlePointer.getPamHandle(), flags));
 	}
 
-	public void chauthtok() throws PAMException {
+	public void chauthtok() throws LoginException {
 		this.chauthtok(0);
 	}
 
-	private void chauthtok(int flags) throws PAMException {
-		this.dispatchReturnValue(PamLibrary.INSTANCE.pam_chauthtok(
+	private void chauthtok(int flags) throws LoginException {
+		this.dispatchReturnValue(PAMLibrary.INSTANCE.pam_chauthtok(
 				this.pamHandlePointer.getPamHandle(), flags));
 	}
 
-	public void close() throws PAMException {
+	public void close() throws LoginException {
 		if (this.open) {
-			this.dispatchReturnValue(PamLibrary.INSTANCE.pam_end(
+			this.dispatchReturnValue(PAMLibrary.INSTANCE.pam_end(
 					pamHandlePointer.getPamHandle(), this.state));
 			this.open = false;
 		}
@@ -184,31 +191,38 @@ public final class Transaction {
 		}
 	}
 
-	private void dispatchReturnValue(final int retVal) throws PAMException {
+	private void dispatchReturnValue(final int retVal) throws LoginException {
 		this.state = retVal;
 		if (this.state != ReturnCode.PAM_SUCCESS.getCode()) {
-			if (this.state == ReturnCode.PAM_USER_UNKNOWN.getCode()) {
-				throw new PAMException("Failed to find user" + this.getUser()
-						+ " with error: " + this.state);
-			} else {
-				throw new PAMException(
-						"Failed to authenticate for an unknown error: "
-								+ PamLibrary.INSTANCE.pam_strerror(
-										pamHandlePointer.getPamHandle(),
-										this.state));
+			final String message = String.format(
+					"PAM message: %s [Return code: %d]",
+					PAMLibrary.INSTANCE.pam_strerror(
+							pamHandlePointer.getPamHandle(), this.state),
+					this.state);
+			switch (ReturnCode.valueOf("" + retVal)) {
+			case PAM_USER_UNKNOWN:
+				throw new AccountNotFoundException(message);
+			case PAM_CRED_EXPIRED:
+				throw new CredentialExpiredException(message);
+			case PAM_CRED_UNAVAIL:
+				throw new CredentialNotFoundException(message);
+			case PAM_ACCT_EXPIRED:
+			default:
+				throw new FailedLoginException(message);
 			}
+
 		}
 	}
 
 	private String getStringItem(final ItemType itemType) {
 		String[] item = new String[1];
-		PamLibrary.INSTANCE.pam_get_item(this.pamHandlePointer.getPamHandle(),
+		PAMLibrary.INSTANCE.pam_get_item(this.pamHandlePointer.getPamHandle(),
 				itemType.getCode(), item);
 		return item[0];
 	}
 
 	private void setStringItem(final ItemType itemType, final String value) {
-		PamLibrary.INSTANCE.pam_set_item(this.pamHandlePointer.getPamHandle(),
+		PAMLibrary.INSTANCE.pam_set_item(this.pamHandlePointer.getPamHandle(),
 				itemType.getCode(), value);
 	}
 

@@ -15,6 +15,8 @@
  */
 package org.pamther;
 
+import javax.security.auth.login.LoginException;
+
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -33,7 +35,7 @@ public class TransactionTest {
 	private static TempUser user;
 
 	@BeforeClass
-	public static void createUser() throws Exception {
+	public static void createUser() throws LoginException {
 		TransactionTest.user = new TempUser(TransactionTest.NAME,
 				TransactionTest.PASSWORD);
 		TransactionTest.user.create();
@@ -46,7 +48,7 @@ public class TransactionTest {
 	}
 
 	@Test
-	public void haveAService() throws PAMException {
+	public void haveAService() throws LoginException {
 		Transaction pam = new Transaction();
 		Assert.assertEquals("login", pam.getService());
 		pam.setService("su");
@@ -55,7 +57,7 @@ public class TransactionTest {
 	}
 
 	@Test
-	public void login() throws PAMException {
+	public void login() throws LoginException {
 		Transaction pam = new Transaction("login", TransactionTest.NAME, null);
 		pam.setPassword(TransactionTest.PASSWORD);
 		pam.authenticate();
@@ -65,7 +67,7 @@ public class TransactionTest {
 	}
 
 	@Test
-	public void setcred() throws PAMException {
+	public void setcred() throws LoginException {
 		Transaction pam = new Transaction("login", TransactionTest.NAME, null);
 		pam.setPassword(TransactionTest.PASSWORD);
 		pam.authenticate();
@@ -76,7 +78,7 @@ public class TransactionTest {
 	}
 	
 	@Test
-	public void beCollectableByGC() throws PAMException {
+	public void beCollectableByGC() throws LoginException {
 		Transaction pam = new Transaction("login", TransactionTest.NAME, null);
 		pam.setPassword(TransactionTest.PASSWORD);
 		pam.authenticate();

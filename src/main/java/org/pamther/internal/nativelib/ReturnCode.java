@@ -17,6 +17,7 @@ package org.pamther.internal.nativelib;
 
 /**
  * TODO
+ * 
  * @author <a href="https://github.com/RCBiczok">Rudolf Biczok</a>
  */
 public enum ReturnCode {
@@ -80,20 +81,13 @@ public enum ReturnCode {
 	PAM_MODULE_UNKNOWN(28),
 
 	PAM_DOMAIN_UNKNOWN(29);
-	
-	/**
-	 * @uml.property  name="code"
-	 */
+
 	private int code;
-	
+
 	ReturnCode(int code) {
 		this.code = code;
 	}
-	
-	/**
-	 * @return
-	 * @uml.property  name="code"
-	 */
+
 	public int getCode() {
 		return this.code;
 	}
