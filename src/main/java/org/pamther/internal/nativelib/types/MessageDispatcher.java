@@ -20,7 +20,7 @@ import javax.security.auth.callback.NameCallback;
 import javax.security.auth.callback.PasswordCallback;
 
 import org.pamther.internal.nativelib.MsgStyle;
-
+import org.pamther.jaas.NewPasswordCallback;
 
 /**
  * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
@@ -31,13 +31,14 @@ class MessageDispatcher {
 
 		Callback callback = null;
 
-		if (message.equals("Password: ")
-				|| message.equals("Enter new UNIX password: ")
-				|| message.equals("Retype new UNIX password: ")) {
+		if (message.equals("Password: ")) {
 			callback = new PasswordCallback(message,
 					type == MsgStyle.PAM_PROMPT_ECHO_ON.getCode());
-		}
-		else if (message.equals("login: ")) {
+		} else if (message.equals("Enter new UNIX password: ")
+				|| message.equals("Retype new UNIX password: ")) {
+			callback = new NewPasswordCallback(message,
+					type == MsgStyle.PAM_PROMPT_ECHO_ON.getCode());
+		} else if (message.equals("login: ")) {
 			callback = new NameCallback(message);
 		}
 
