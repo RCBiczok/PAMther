@@ -38,7 +38,7 @@ public class TransactionTest {
 	private static DefaultCallbackHandler handler;
 
 	@BeforeClass
-	public static void createUser() throws LoginException {
+	public static void creat() throws LoginException {
 		TransactionTest.user = new TempUser(TransactionTest.NAME,
 				TransactionTest.OLD_PASSWORD);
 		TransactionTest.user.create();
@@ -49,43 +49,43 @@ public class TransactionTest {
 	}
 
 	@AfterClass
-	public static void deleteUser() {
+	public static void delet() {
 		TransactionTest.user.delete();
 		TransactionTest.user = null;
 	}
 
 	@Test
 	public void haveAService() throws LoginException {
-		Transaction pam = new Transaction("login", TransactionTest.NAME, handler);
-		Assert.assertEquals("login", pam.getService());
-		pam.setService("su");
-		Assert.assertEquals("su", pam.getService());
-		pam.close();
+		Transaction transaction = new Transaction("login", TransactionTest.NAME, handler);
+		Assert.assertEquals("login", transaction.getService());
+		transaction.setService("su");
+		Assert.assertEquals("su", transaction.getService());
+		transaction.close();
 	}
 
 	@Test
 	public void login() throws LoginException {
-		Transaction pam = new Transaction("login", TransactionTest.NAME, handler);
-		pam.authenticate();
-		pam.verify();
-		pam.close();
+		Transaction transaction = new Transaction("login", TransactionTest.NAME, handler);
+		transaction.authenticate();
+		transaction.verify();
+		transaction.close();
 		System.gc();
 	}
 
 	@Test
 	public void setcred() throws LoginException {
-		Transaction pam = new Transaction("login", TransactionTest.NAME, handler);
-		pam.authenticate();
-		pam.verify();
-		pam.chauthtok();
+		Transaction transaction = new Transaction("login", TransactionTest.NAME, handler);
+		transaction.authenticate();
+		transaction.verify();
+		transaction.chauthtok();
 		try {
-		pam.authenticate();
+		transaction.authenticate();
 		}
 		catch (LoginException e) {
 			return;
 		}
 		finally {
-			pam.close();
+			transaction.close();
 		}
 		Assert.fail();
 	}
