@@ -39,7 +39,7 @@ import com.sun.jna.Native;
  * non-root.</li>
  * </ul>
  * 
- * @author <a href="https://github.com/RCBiczok">Rudolf Biczok</a>
+ * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
  */
 public class TempUser {
 

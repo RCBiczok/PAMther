@@ -35,7 +35,7 @@ import org.pamther.internal.nativelib.types.NativeCallbackHandlerImp;
  * href="http://linux.die.net/man/3/pam_authenticate">pam_authenticate</a> or <a
  * href="http://linux.die.net/man/3/pam_acct_mgmt">pam_acct_mgmt</a>.
  * 
- * @author <a href="https://github.com/RCBiczok">Rudolf Biczok</a>
+ * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
  */
 public final class Transaction {
 

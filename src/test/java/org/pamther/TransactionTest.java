@@ -26,7 +26,7 @@ import org.pamther.test.TempUser;
 /**
  * The class {@link PAMService} should ...
  * 
- * @author <a href="https://github.com/RCBiczok">Rudolf Biczok</a>
+ * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
  */
 public class TransactionTest {
 

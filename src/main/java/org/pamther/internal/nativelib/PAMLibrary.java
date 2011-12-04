@@ -20,13 +20,12 @@ import org.pamther.internal.nativelib.types.Handle;
 import org.pamther.internal.nativelib.types.HandleByReference;
 
 import com.sun.jna.Library;
-import com.sun.jna.Memory;
 import com.sun.jna.Native;
 
 /**
  * Native interface to PAM library.
  * 
- * @author <a href="https://github.com/RCBiczok">Rudolf Biczok</a>
+ * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
  */
 public interface PAMLibrary extends Library {
 	public static final PAMLibrary INSTANCE = (PAMLibrary) Native.loadLibrary(

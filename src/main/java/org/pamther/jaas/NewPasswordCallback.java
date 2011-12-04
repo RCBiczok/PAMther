@@ -25,7 +25,7 @@ import javax.security.auth.callback.PasswordCallback;
  * changing passwords. Only PAM methods like
  * {@link org.pamther.Transaction#chauthtok() Transaction.chauthtok()}.
  * 
- * @author <a href="https://github.com/RCBiczok">Rudolf Biczok</a>
+ * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
  */
 public class NewPasswordCallback extends PasswordCallback {
 

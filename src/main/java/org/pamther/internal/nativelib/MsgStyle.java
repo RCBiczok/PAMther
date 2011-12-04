@@ -16,7 +16,7 @@
 package org.pamther.internal.nativelib;
 
 /**
- * @author   biczok
+ * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
  */
 public enum MsgStyle {
 

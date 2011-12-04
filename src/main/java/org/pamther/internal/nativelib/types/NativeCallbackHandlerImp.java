@@ -28,7 +28,8 @@ import com.sun.jna.Pointer;
 import com.sun.jna.ptr.PointerByReference;
 
 /**
- * Some doc.
+ * Some java doc
+ * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
  */
 public class NativeCallbackHandlerImp implements NativeCallbackHandler {
 

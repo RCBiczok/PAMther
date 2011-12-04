@@ -20,6 +20,10 @@ import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.NameCallback;
 import javax.security.auth.callback.PasswordCallback;
 
+/**
+ * 
+ * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
+ */
 public class DefaultCallbackHandler implements CallbackHandler {
 
 	private String name;

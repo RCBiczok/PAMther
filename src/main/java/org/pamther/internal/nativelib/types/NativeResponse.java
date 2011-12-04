@@ -18,6 +18,10 @@ package org.pamther.internal.nativelib.types;
 import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
 
+/**
+ * 
+ * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
+ */
 public class NativeResponse extends Structure {
 
 	private static final String[] FIELD_ORDER = new String[] { "resp",

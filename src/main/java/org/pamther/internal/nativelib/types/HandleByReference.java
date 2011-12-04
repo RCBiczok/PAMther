@@ -18,7 +18,7 @@ package org.pamther.internal.nativelib.types;
 import com.sun.jna.ptr.PointerByReference;
 
 /**
- * @author biczok
+ * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
  */
 public class HandleByReference extends PointerByReference {
 

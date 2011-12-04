@@ -23,7 +23,7 @@ import org.pamther.internal.nativelib.MsgStyle;
 
 
 /**
- * @author <a href="https://github.com/RCBiczok">Rudolf Biczok</a>
+ * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
  */
 class MessageDispatcher {
 

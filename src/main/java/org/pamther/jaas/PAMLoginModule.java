@@ -24,6 +24,10 @@ import javax.security.auth.spi.LoginModule;
 
 import org.pamther.Transaction;
 
+/**
+ * 
+ * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
+ */
 public class PAMLoginModule implements LoginModule {
 	private static final String SERVICE_NAME_OPTION = "serviceName";
 	private CallbackHandler callbackHandler;

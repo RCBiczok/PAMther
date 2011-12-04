@@ -22,7 +22,7 @@ import com.sun.jna.PointerType;
  * Represents a handle returned by the <a
  * href="http://linux.die.net/man/3/pam_start">pam_start</a> method.
  * 
- * @author <a href="https://github.com/RCBiczok">Rudolf Biczok</a>
+ * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
  */
 public class Handle extends PointerType {
 
