@@ -22,7 +22,9 @@ import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 
+import org.pamther.DefaultCallbackHandler;
 import org.pamther.Transaction;
+import org.pamther.TransactionTest;
 
 /**
  * 
@@ -35,16 +37,28 @@ public class PAMLoginModule implements LoginModule {
 
 	private Transaction transaction;
 
-	public boolean login(String service, String userName, char[] password)
+	public static void login(String service, String user, char[] password)
 			throws LoginException {
-		this.transaction = null;
-		return true;
+		DefaultCallbackHandler handler = new DefaultCallbackHandler();
+		handler.setName(user);
+		handler.setOldPassword(password);
+		Transaction transaction = new Transaction(service, user, handler);
+		transaction.authenticate();
+		transaction.verify();
+		transaction.close();
 	}
 
-	public boolean changeCredential(String service, String userName,
+	public static void changeCredential(String service, String user,
 			char[] oldPassword, char[] newPassword) throws LoginException {
-		this.transaction = null;
-		return true;
+		DefaultCallbackHandler handler = new DefaultCallbackHandler();
+		handler.setName(user);
+		handler.setOldPassword(oldPassword);
+		handler.setNewPassword(newPassword);
+		Transaction transaction = new Transaction(service, user, handler);
+		transaction.authenticate();
+		transaction.verify();
+		transaction.chauthtok();
+		transaction.close();
 	}
 
 	@Override
