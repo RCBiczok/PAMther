@@ -16,6 +16,7 @@
 package org.pamther;
 
 import javax.security.auth.callback.CallbackHandler;
+import javax.security.auth.login.AccountExpiredException;
 import javax.security.auth.login.AccountNotFoundException;
 import javax.security.auth.login.CredentialExpiredException;
 import javax.security.auth.login.CredentialNotFoundException;
@@ -180,18 +181,24 @@ public final class Transaction {
 					PAMLibrary.INSTANCE.pam_strerror(
 							pamHandlePointer.getPamHandle(), this.state),
 					this.state);
+			LoginException exception;
 			switch (ReturnCode.dispatch(retVal)) {
 			case PAM_USER_UNKNOWN:
-				throw new AccountNotFoundException(message);
-			case PAM_CRED_EXPIRED:
-				throw new CredentialExpiredException(message);
-			case PAM_CRED_UNAVAIL:
-				throw new CredentialNotFoundException(message);
+				exception = new AccountNotFoundException(message);
 			case PAM_ACCT_EXPIRED:
+				exception =  new AccountExpiredException(message);
+			case PAM_CRED_EXPIRED:
+				exception =  new CredentialExpiredException(message);
+			case PAM_CRED_UNAVAIL:
+				exception =  new CredentialNotFoundException(message);	
+			case PAM_CONV_ERR:
+				exception = new FailedLoginException(message);
+				exception.initCause(this.pamConverse.conv.getLastException());
 			default:
-				throw new FailedLoginException(message);
+				exception = new FailedLoginException(message);
 			}
-
+			
+			throw exception;
 		}
 	}
 

@@ -26,7 +26,7 @@ import com.sun.jna.ptr.PointerByReference;
  * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
  */
 public interface NativeCallbackHandler extends Callback {
-	
+
 	int callback(int numMsg, PointerByReference msg, PointerByReference resp,
 			Pointer appData);
 
@@ -34,4 +34,5 @@ public interface NativeCallbackHandler extends Callback {
 
 	void setCallbackHandler(CallbackHandler handler);
 
+	Exception getLastException();
 };

@@ -15,12 +15,9 @@
  */
 package org.pamther.internal.nativelib.types;
 
-import java.io.IOException;
-
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.PasswordCallback;
-import javax.security.auth.callback.UnsupportedCallbackException;
 
 import org.pamther.internal.nativelib.ReturnCode;
 
@@ -29,24 +26,19 @@ import com.sun.jna.ptr.PointerByReference;
 
 /**
  * Some java doc
+ * 
  * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
  */
 public class NativeCallbackHandlerImp implements NativeCallbackHandler {
-
-	private CallbackHandler handler;
 
 	private static final MessageDispatcher DISPATCHER = new MessageDispatcher();
 
 	private static final NativeResponse DUMMY_RESPONSE = new NativeResponse();
 
-	public CallbackHandler getCallbackHandler() {
-		return this.handler;
-	}
-
-	public void setCallbackHandler(CallbackHandler handler) {
-		this.handler = handler;
-	}
-
+	private CallbackHandler handler;
+	
+	private Exception lastException;
+	
 	@Override
 	public int callback(int numMsg, PointerByReference msg,
 			PointerByReference resp, Pointer appData) {
@@ -61,14 +53,15 @@ public class NativeCallbackHandlerImp implements NativeCallbackHandler {
 					message.msg, message.msg_style);
 		}
 
+		/*
+		 * We catch any exception here and throw it after the callback execution
+		 * so that the native PAM routine can free heap-space.
+		 */
 		try {
 			this.handler.handle(callbacks);
-		} catch (IOException e) {
-			// TODO HOW TO HANDLE???
-			e.printStackTrace();
-		} catch (UnsupportedCallbackException e) {
-			// TODO HOW TO HANDLE???
-			e.printStackTrace();
+		} catch (Exception e) {
+			this.lastException = e;
+			return ReturnCode.PAM_CONV_ERR.getCode();
 		}
 
 		final NativeResponse[] responses = (NativeResponse[]) new NativeResponse.ByReference(
@@ -93,4 +86,22 @@ public class NativeCallbackHandlerImp implements NativeCallbackHandler {
 		return ReturnCode.PAM_SUCCESS.getCode();
 
 	}
+
+	public CallbackHandler getCallbackHandler() {
+		return this.handler;
+	}
+
+	public void setCallbackHandler(CallbackHandler handler) {
+		this.handler = handler;
+	}
+	
+	/**
+	 * The lastException property.
+	 *
+	 * @return the lastException
+	 */
+	public Exception getLastException() {
+		return lastException;
+	}
+
 };
