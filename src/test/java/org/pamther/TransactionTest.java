@@ -31,8 +31,8 @@ import org.pamther.test.TempUser;
 public class TransactionTest {
 
 	private static final String NAME = "pamtest";
-	private static final String OLD_PASSWORD = "mop";
-	private static final String NEW_PASSWORD = "new_mop";
+	private static final char[] OLD_PASSWORD = "mop".toCharArray();
+	private static final char[] NEW_PASSWORD = "new_mop".toCharArray();
 	private static TempUser user;
 	
 	private static DefaultCallbackHandler handler;
@@ -44,8 +44,8 @@ public class TransactionTest {
 		TransactionTest.user.create();
 		handler = new DefaultCallbackHandler();
 		handler.setName(TransactionTest.NAME);
-		handler.setOldPassword(TransactionTest.OLD_PASSWORD.toCharArray());
-		handler.setNewPassword(TransactionTest.NEW_PASSWORD.toCharArray());
+		handler.setOldPassword(TransactionTest.OLD_PASSWORD);
+		handler.setNewPassword(TransactionTest.NEW_PASSWORD);
 	}
 
 	@AfterClass

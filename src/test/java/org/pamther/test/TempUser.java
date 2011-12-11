@@ -49,7 +49,7 @@ public class TempUser {
 	private static final String DEFAULT_SEED = "ABC";
 
 	private String name;
-	private String password;
+	private char[] password;
 
 	private boolean isCreated;
 
@@ -77,7 +77,7 @@ public class TempUser {
 	 * @throws RuntimeException
 	 *             if user ins not root user.
 	 */
-	public TempUser(String name, String password) {
+	public TempUser(String name, char[] password) {
 		if (TempUser.CLIB.geteuid() != 0)
 			throw new RuntimeException("Caller must be root");
 		this.name = name;
@@ -98,7 +98,7 @@ public class TempUser {
 	 * 
 	 * @return the user password.
 	 */
-	public String getPassword() {
+	public char[] getPassword() {
 		return password;
 	}
 
@@ -113,7 +113,7 @@ public class TempUser {
 		command.add("useradd");
 		command.add(this.name);
 		command.add("-p");
-		command.add(TempUser.CRYPT.crypt(password, TempUser.DEFAULT_SEED));
+		command.add(TempUser.CRYPT.crypt(new String(password), TempUser.DEFAULT_SEED));
 		command.add("-M");
 		TempUser.execAndWait(command);
 		this.isCreated = true;
