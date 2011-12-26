@@ -43,9 +43,6 @@ import com.sun.jna.Native;
  */
 public class TempUser {
 
-	private static final CLibrary CLIB;
-	private static final CryptLibrary CRYPT;
-
 	private static final String DEFAULT_SEED = "ABC";
 
 	private String name;
@@ -58,13 +55,12 @@ public class TempUser {
 	 * interfaces to utility functions.
 	 */
 	static {
-		if (!System.getProperty("os.name").startsWith("Linux"))
+		if (!System.getProperty("os.name").startsWith("Linux")) {
 			throw new RuntimeException(
-					"This class requires a Linux-based operating system (System.getProperty(\"os.name\") contains \""
+					"This class requires a Linux-based operating system +"
+							+ "(System.getProperty(\"os.name\") contains \""
 							+ System.getProperty("os.name") + "\")");
-		/* load the libraries only if we can be sure that this platform is Linux */
-		CLIB = (CLibrary) Native.loadLibrary("c", CLibrary.class);
-		CRYPT = (CryptLibrary) Native.loadLibrary("crypt", CryptLibrary.class);
+		}
 	}
 
 	/**
@@ -77,9 +73,11 @@ public class TempUser {
 	 * @throws RuntimeException
 	 *             if user ins not root user.
 	 */
-	public TempUser(String name, char[] password) {
-		if (TempUser.CLIB.geteuid() != 0)
+	public TempUser(final String name, final char[] password) {
+		// if (TempUser.CLIB.geteuid() != 0) {
+		if (POSIXLibrary.geteuid() != 0) {
 			throw new RuntimeException("Caller must be root");
+		}
 		this.name = name;
 		this.password = password;
 	}
@@ -113,7 +111,8 @@ public class TempUser {
 		command.add("useradd");
 		command.add(this.name);
 		command.add("-p");
-		command.add(TempUser.CRYPT.crypt(new String(password), TempUser.DEFAULT_SEED));
+		command.add(CryptLibrary.crypt(new String(password),
+				TempUser.DEFAULT_SEED));
 		command.add("-M");
 		TempUser.execAndWait(command);
 		this.isCreated = true;
@@ -182,13 +181,5 @@ public class TempUser {
 		}
 
 		return out;
-	}
-
-	private interface CLibrary extends Library {
-		int geteuid();
-	}
-
-	private interface CryptLibrary extends Library {
-		String crypt(String key, String salt);
 	}
 }
