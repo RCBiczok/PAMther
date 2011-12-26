@@ -30,6 +30,9 @@ import org.pamther.internal.nativelib.types.Conversation;
 import org.pamther.internal.nativelib.types.HandleByReference;
 import org.pamther.internal.nativelib.types.NativeCallbackHandlerImp;
 
+import com.sun.jna.Pointer;
+import com.sun.jna.ptr.PointerByReference;
+
 /**
  * The {@link Transaction} encapsulates a PAM handle returned by pam_start and
  * is the first place for executing common PAM functions like <a
@@ -78,7 +81,7 @@ public final class Transaction {
 	 *      files</a>
 	 */
 	public String getService() {
-		return this.getStringItem(ItemType.PAM_SERVICE);
+		return this.getItem(ItemType.PAM_SERVICE).getString(0);
 	}
 
 	/**
@@ -91,15 +94,15 @@ public final class Transaction {
 	 *      files</a>
 	 */
 	public void setService(final String service) {
-		this.setStringItem(ItemType.PAM_SERVICE, service);
+		this.setItem(ItemType.PAM_SERVICE, service);
 	}
 
 	public String getUser() {
-		return this.getStringItem(ItemType.PAM_USER);
+		return this.getItem(ItemType.PAM_USER).getString(0);
 	}
 
 	public void setUser(String user) {
-		this.setStringItem(ItemType.PAM_SERVICE, user);
+		this.setItem(ItemType.PAM_SERVICE, user);
 	}
 
 	/**
@@ -125,7 +128,7 @@ public final class Transaction {
 
 		this.pamConverse.conv.setCallbackHandler(handler);
 
-		this.dispatchReturnValue(PAMLibrary.INSTANCE.pam_start(service, user,
+		this.dispatchReturnValue(PAMLibrary.pam_start(service, user,
 				this.pamConverse, this.pamHandlePointer));
 	}
 
@@ -134,7 +137,7 @@ public final class Transaction {
 	}
 
 	private void authenticate(int flags) throws LoginException {
-		this.dispatchReturnValue(PAMLibrary.INSTANCE.pam_authenticate(
+		this.dispatchReturnValue(PAMLibrary.pam_authenticate(
 				this.pamHandlePointer.getPamHandle(), flags));
 	}
 
@@ -143,7 +146,7 @@ public final class Transaction {
 	}
 
 	private void verify(int flags) throws LoginException {
-		this.dispatchReturnValue(PAMLibrary.INSTANCE.pam_acct_mgmt(
+		this.dispatchReturnValue(PAMLibrary.pam_acct_mgmt(
 				this.pamHandlePointer.getPamHandle(), flags));
 	}
 
@@ -152,13 +155,13 @@ public final class Transaction {
 	}
 
 	private void chauthtok(int flags) throws LoginException {
-		this.dispatchReturnValue(PAMLibrary.INSTANCE.pam_chauthtok(
+		this.dispatchReturnValue(PAMLibrary.pam_chauthtok(
 				this.pamHandlePointer.getPamHandle(), flags));
 	}
 
 	public void close() throws LoginException {
 		if (this.open) {
-			this.dispatchReturnValue(PAMLibrary.INSTANCE.pam_end(
+			this.dispatchReturnValue(PAMLibrary.pam_end(
 					pamHandlePointer.getPamHandle(), this.state));
 			this.open = false;
 		}
@@ -177,40 +180,39 @@ public final class Transaction {
 		this.state = retVal;
 		if (this.state != ReturnCode.PAM_SUCCESS.getCode()) {
 			final String message = String.format(
-					"PAM message: %s [Return code: %d]",
-					PAMLibrary.INSTANCE.pam_strerror(
-							pamHandlePointer.getPamHandle(), this.state),
-					this.state);
+					"PAM message: %s [Return code: %d]", PAMLibrary
+							.pam_strerror(pamHandlePointer.getPamHandle(),
+									this.state), this.state);
 			LoginException exception;
 			switch (ReturnCode.dispatch(retVal)) {
 			case PAM_USER_UNKNOWN:
 				exception = new AccountNotFoundException(message);
 			case PAM_ACCT_EXPIRED:
-				exception =  new AccountExpiredException(message);
+				exception = new AccountExpiredException(message);
 			case PAM_CRED_EXPIRED:
-				exception =  new CredentialExpiredException(message);
+				exception = new CredentialExpiredException(message);
 			case PAM_CRED_UNAVAIL:
-				exception =  new CredentialNotFoundException(message);	
+				exception = new CredentialNotFoundException(message);
 			case PAM_CONV_ERR:
 				exception = new FailedLoginException(message);
 				exception.initCause(this.pamConverse.conv.getLastException());
 			default:
 				exception = new FailedLoginException(message);
 			}
-			
+
 			throw exception;
 		}
 	}
 
-	private String getStringItem(final ItemType itemType) {
-		String[] item = new String[1];
-		PAMLibrary.INSTANCE.pam_get_item(this.pamHandlePointer.getPamHandle(),
+	private Pointer getItem(final ItemType itemType) {
+		PointerByReference item = new PointerByReference();
+		PAMLibrary.pam_get_item(this.pamHandlePointer.getPamHandle(),
 				itemType.getCode(), item);
-		return item[0];
+		return item.getValue();
 	}
 
-	private void setStringItem(final ItemType itemType, final String value) {
-		PAMLibrary.INSTANCE.pam_set_item(this.pamHandlePointer.getPamHandle(),
+	private void setItem(final ItemType itemType, final String value) {
+		PAMLibrary.pam_set_item(this.pamHandlePointer.getPamHandle(),
 				itemType.getCode(), value);
 	}
 

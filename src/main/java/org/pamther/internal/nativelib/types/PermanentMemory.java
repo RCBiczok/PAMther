@@ -24,7 +24,7 @@ import com.sun.jna.Memory;
  * 
  * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
  */
-class PermanentMemory extends Memory {
+public class PermanentMemory extends Memory {
 
 	/**
 	 * Allocates some memory.
@@ -33,7 +33,7 @@ class PermanentMemory extends Memory {
 	 *            number of <em>bytes</em> to allocate
 	 * @see com.sun.jna.Memory#Memory(long)
 	 */
-	PermanentMemory(long size) {
+	public PermanentMemory(long size) {
 		super(size);
 	}
 

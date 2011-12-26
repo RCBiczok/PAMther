@@ -19,40 +19,42 @@ import org.pamther.internal.nativelib.types.Conversation;
 import org.pamther.internal.nativelib.types.Handle;
 import org.pamther.internal.nativelib.types.HandleByReference;
 
-import com.sun.jna.Library;
 import com.sun.jna.Native;
+import com.sun.jna.ptr.PointerByReference;
 
 /**
  * Native interface to PAM library.
  * 
  * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
  */
-public interface PAMLibrary extends Library {
-	public static final PAMLibrary INSTANCE = (PAMLibrary) Native.loadLibrary(
-			"pam", PAMLibrary.class);
-
-	int pam_start(String service, String user, Conversation pamConverse,
+public final class PAMLibrary {
+	
+	static {
+		Native.register("pam");
+	}
+	
+	/**
+	 * Private constructor for preventing instantiations.
+	 */
+	private PAMLibrary() {
+	}
+	
+	public static native int pam_start(String service, String user, Conversation pamConverse,
 			HandleByReference pamHandle);
 	
-	int pam_end(Handle pamHandle, int status);
+	public static native int pam_end(Handle pamHandle, int status);
 	
-	int pam_authenticate(Handle pamHandle, int flags);
+	public static native int pam_authenticate(Handle pamHandle, int flags);
 	
-	int pam_acct_mgmt(Handle pamHandle, int flags);
+	public static native int pam_acct_mgmt(Handle pamHandle, int flags);
 
-	int pam_chauthtok(Handle pamHandle, int flags);
+	public static native int pam_chauthtok(Handle pamHandle, int flags);
 	
-	int pam_setcred(Handle pamHandle, int flags);
+	public static native int pam_setcred(Handle pamHandle, int flags);
+	
+	public static native int pam_get_item(Handle pamHandle, int itemType, PointerByReference item);
 
-	int pam_open_session(Handle pamHandle, int flags);
-	
-	int pam_close_session(Handle pamHandle, int flags);
-	
-	int pam_get_item(Handle pamHandle, int itemType, String[] item);
+	public static native int pam_set_item(Handle pamHandle, int itemType, String item);
 
-	int pam_get_user(Handle pamHandle, String[] user, String prompt);
-	
-	int pam_set_item(Handle pamHandle, int itemType, String item);
-
-	String pam_strerror(Handle pamHandle, int errorNumber);
+	public static native String pam_strerror(Handle pamHandle, int errorNumber);
 }
