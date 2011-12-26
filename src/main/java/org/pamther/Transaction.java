@@ -60,8 +60,16 @@ public final class Transaction {
 	 */
 	private int state;
 
+	/**
+	 * Holds information about the availability of this {@link Transaction}
+	 * instance.
+	 */
 	private boolean open = true;
 
+	/**
+	 * Holds the {@link Conversation} form the communication between module and
+	 * application.
+	 */
 	private final Conversation pamConverse = new Conversation(
 			new NativeCallbackHandlerImp());
 
@@ -97,11 +105,24 @@ public final class Transaction {
 		this.setItem(ItemType.PAM_SERVICE, service);
 	}
 
+	/**
+	 * Returns the user name item.
+	 * 
+	 * @return the user name item.
+	 * @see <a href="http://linux.die.net/man/3/pam_get_item">pam_get_item()</a>
+	 */
 	public String getUser() {
 		return this.getItem(ItemType.PAM_USER).getString(0);
 	}
 
-	public void setUser(String user) {
+	/**
+	 * Sets the user name item.
+	 * 
+	 * @param user
+	 *            the name of the user.
+	 * @see <a href="http://linux.die.net/man/3/pam_set_item">pam_set_item()</a>
+	 */
+	public void setUser(final String user) {
 		this.setItem(ItemType.PAM_SERVICE, user);
 	}
 
@@ -109,9 +130,17 @@ public final class Transaction {
 	 * Constructs a new PAM transaction with {@link Transaction#DEFAULT_SERVICE}
 	 * as name for the service configuration.
 	 * 
-	 * @throws PAMException
-	 *             if an error accrued during the call of <a
-	 *             href="http://linux.die.net/man/3/pam_start">pam_start</a>.
+	 * @param service
+	 *            the name of the user service configuration.
+	 * @param user
+	 *            the name of the user.
+	 * @param handler
+	 *            the used {@link CallbackHandler} instance form handling
+	 *            {@link javax.security.auth.callback.Callback JAAS Callbacks}
+	 * @throws LoginException
+	 *             if an error accrued during the execution of <a
+	 *             href="http://linux.die.net/man/3/pam_start">pam_start()</a>
+	 *             or callback routines.
 	 * @see {@link Transaction#Transaction(String)}
 	 */
 	public Transaction(final String service, final String user,
@@ -132,20 +161,42 @@ public final class Transaction {
 				this.pamConverse, this.pamHandlePointer));
 	}
 
+	/**
+	 * Authenticates the user.
+	 * 
+	 * @throws LoginException
+	 *             if an error accrued during the execution of <a
+	 *             href="http://linux.die.net/man/3/pam_start">pam_start()</a>
+	 *             or callback routines.
+	 * @see <a
+	 *      href="http://linux.die.net/man/3/pam_authenticate">pam_authenticate()</a>
+	 */
 	public void authenticate() throws LoginException {
 		this.authenticate(0);
 	}
 
-	private void authenticate(int flags) throws LoginException {
+	/**
+	 * Authenticates the user.
+	 * 
+	 * @param flags
+	 *            for passing additional options the routine.
+	 * @throws LoginException
+	 *             if an error accrued during the execution of <a
+	 *             href="http://linux.die.net/man/3/pam_start">pam_start()</a>
+	 *             or callback routines.
+	 * @see <a
+	 *      href="http://linux.die.net/man/3/pam_authenticate">pam_authenticate()</a>
+	 */
+	private void authenticate(final int flags) throws LoginException {
 		this.dispatchReturnValue(PAMLibrary.pam_authenticate(
 				this.pamHandlePointer.getPamHandle(), flags));
 	}
 
-	public void verify() throws LoginException {
-		this.verify(0);
+	public void validate() throws LoginException {
+		this.validate(0);
 	}
 
-	private void verify(int flags) throws LoginException {
+	private void validate(int flags) throws LoginException {
 		this.dispatchReturnValue(PAMLibrary.pam_acct_mgmt(
 				this.pamHandlePointer.getPamHandle(), flags));
 	}
@@ -154,7 +205,7 @@ public final class Transaction {
 		this.chauthtok(0);
 	}
 
-	private void chauthtok(int flags) throws LoginException {
+	private void chauthtok(final int flags) throws LoginException {
 		this.dispatchReturnValue(PAMLibrary.pam_chauthtok(
 				this.pamHandlePointer.getPamHandle(), flags));
 	}

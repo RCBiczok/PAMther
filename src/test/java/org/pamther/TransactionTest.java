@@ -67,7 +67,7 @@ public class TransactionTest {
 	public void login() throws LoginException {
 		Transaction transaction = new Transaction("login", TransactionTest.NAME, handler);
 		transaction.authenticate();
-		transaction.verify();
+		transaction.validate();
 		transaction.close();
 		System.gc();
 	}
@@ -76,7 +76,7 @@ public class TransactionTest {
 	public void setcred() throws LoginException {
 		Transaction transaction = new Transaction("login", TransactionTest.NAME, handler);
 		transaction.authenticate();
-		transaction.verify();
+		transaction.validate();
 		transaction.chauthtok();
 		try {
 		transaction.authenticate();

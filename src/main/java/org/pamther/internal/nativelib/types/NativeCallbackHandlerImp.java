@@ -25,7 +25,7 @@ import com.sun.jna.Pointer;
 import com.sun.jna.ptr.PointerByReference;
 
 /**
- * Some java doc
+ * Used as bridge between the JNA callback mechanism and the JAAS interfaces.
  * 
  * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
  */

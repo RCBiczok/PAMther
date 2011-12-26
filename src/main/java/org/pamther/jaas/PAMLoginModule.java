@@ -44,7 +44,7 @@ public class PAMLoginModule implements LoginModule {
 		handler.setOldPassword(password);
 		Transaction transaction = new Transaction(service, user, handler);
 		transaction.authenticate();
-		transaction.verify();
+		transaction.validate();
 		transaction.close();
 	}
 
@@ -56,7 +56,7 @@ public class PAMLoginModule implements LoginModule {
 		handler.setNewPassword(newPassword);
 		Transaction transaction = new Transaction(service, user, handler);
 		transaction.authenticate();
-		transaction.verify();
+		transaction.validate();
 		transaction.chauthtok();
 		transaction.close();
 	}
