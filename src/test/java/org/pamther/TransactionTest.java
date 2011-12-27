@@ -31,40 +31,25 @@ import org.pamther.test.TempUser;
 public final class TransactionTest {
 
 	/**
-	 * Dummy user name.
-	 */
-	private static final String NAME = "pamther_test";
-
-	/**
-	 * Dummy password (old).
-	 */
-	private static final char[] OLD_PASSWORD = "mop".toCharArray();
-
-	/**
-	 * Dummy password (new).
-	 */
-
-	private static final char[] NEW_PASSWORD = "new_mop".toCharArray();
-
-	/**
 	 * Dummy user.
 	 */
 	private static TempUser user;
 
 	/**
-	 * Used {@link CallbackHandler} during the tests.
+	 * Used {@link javax.security.auth.callback.CallbackHandler CallbackHandler}
+	 * during the tests.
 	 */
 	private static DefaultCallbackHandler handler;
 
 	@BeforeClass
 	public static void creat() throws LoginException {
-		TransactionTest.user = new TempUser(TransactionTest.NAME,
-				TransactionTest.OLD_PASSWORD);
+		TransactionTest.user = new TempUser("pamther_test",
+				"murks".toCharArray());
 		TransactionTest.user.create();
 		handler = new DefaultCallbackHandler();
-		handler.setName(TransactionTest.NAME);
-		handler.setOldPassword(TransactionTest.OLD_PASSWORD);
-		handler.setNewPassword(TransactionTest.NEW_PASSWORD);
+		handler.setName(TransactionTest.user.getName());
+		handler.setOldPassword(TransactionTest.user.getPassword());
+		handler.setNewPassword("new_murks".toCharArray());
 	}
 
 	@AfterClass
@@ -76,7 +61,7 @@ public final class TransactionTest {
 	@Test
 	public void haveAService() throws LoginException {
 		Transaction transaction = new Transaction("login",
-				TransactionTest.NAME, handler);
+				TransactionTest.user.getName(), handler);
 		Assert.assertEquals("login", transaction.getService());
 		transaction.setService("su");
 		Assert.assertEquals("su", transaction.getService());
@@ -86,7 +71,7 @@ public final class TransactionTest {
 	@Test
 	public void login() throws LoginException {
 		Transaction transaction = new Transaction("login",
-				TransactionTest.NAME, handler);
+				TransactionTest.user.getName(), handler);
 		transaction.authenticate();
 		transaction.validate();
 		transaction.close();
@@ -96,7 +81,7 @@ public final class TransactionTest {
 	@Test
 	public void setcred() throws LoginException {
 		Transaction transaction = new Transaction("login",
-				TransactionTest.NAME, handler);
+				TransactionTest.user.getName(), handler);
 		transaction.authenticate();
 		transaction.validate();
 		transaction.changeAuthTok();
@@ -112,16 +97,18 @@ public final class TransactionTest {
 
 	@Test
 	public void beCollectableByGC() throws LoginException {
-//		Transaction transaction = new Transaction("login", TransactionTest.NAME,
-//				handler);
-//		transaction.authenticate();
-//		transaction.validate();
-//		transaction.close();
-//		transaction = new Transaction("login", TransactionTest.NAME, handler);
-//		transaction.authenticate();
-//		transaction.validate();
-//		transaction.close();
-//		transaction = null;
+		// Transaction transaction = new Transaction("login",
+		// TransactionTest.NAME,
+		// handler);
+		// transaction.authenticate();
+		// transaction.validate();
+		// transaction.close();
+		// transaction = new Transaction("login", TransactionTest.NAME,
+		// handler);
+		// transaction.authenticate();
+		// transaction.validate();
+		// transaction.close();
+		// transaction = null;
 		System.gc();
 	}
 }

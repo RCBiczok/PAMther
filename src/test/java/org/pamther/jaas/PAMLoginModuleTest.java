@@ -31,22 +31,6 @@ import org.pamther.test.TempUser;
 public final class PAMLoginModuleTest {
 
 	/**
-	 * Dummy user name.
-	 */
-	private static final String NAME = "pamther_test";
-
-	/**
-	 * Dummy password (old).
-	 */
-	private static final char[] OLD_PASSWORD = "mop".toCharArray();
-
-	/**
-	 * Dummy password (new).
-	 */
-
-	private static final char[] NEW_PASSWORD = "new_mop".toCharArray();
-
-	/**
 	 * Dummy user.
 	 */
 	private static TempUser user;
@@ -58,13 +42,13 @@ public final class PAMLoginModuleTest {
 
 	@BeforeClass
 	public static void creat() throws LoginException {
-		PAMLoginModuleTest.user = new TempUser(PAMLoginModuleTest.NAME,
-				PAMLoginModuleTest.OLD_PASSWORD);
+		PAMLoginModuleTest.user = new TempUser("pamther_test",
+				"murks".toCharArray());
 		PAMLoginModuleTest.user.create();
 		handler = new DefaultCallbackHandler();
-		handler.setName(PAMLoginModuleTest.NAME);
-		handler.setOldPassword(PAMLoginModuleTest.OLD_PASSWORD);
-		handler.setNewPassword(PAMLoginModuleTest.NEW_PASSWORD);
+		handler.setName(PAMLoginModuleTest.user.getName());
+		handler.setOldPassword("murks".toCharArray());
+		handler.setNewPassword("new_murks".toCharArray());
 	}
 
 	@AfterClass
@@ -76,7 +60,7 @@ public final class PAMLoginModuleTest {
 	@Test
 	public void haveAStaticLoginMethod() throws LoginException {
 		PAMLoginModule.login("login", user.getName(),
-				PAMLoginModuleTest.OLD_PASSWORD);
+				PAMLoginModuleTest.user.getPassword());
 		//TODO: this code produces crashes after running other unit tests.
 //		try {
 //			PAMLoginModule.login("login", user.getName(),
@@ -91,10 +75,10 @@ public final class PAMLoginModuleTest {
 	@Test
 	public void haveAStaticMethodForChangingPassword() throws LoginException {
 		PAMLoginModule.changeCredential("login", user.getName(),
-				PAMLoginModuleTest.OLD_PASSWORD,
-				PAMLoginModuleTest.NEW_PASSWORD);
+				PAMLoginModuleTest.user.getPassword(),
+				"murks".toCharArray());
 		PAMLoginModule.login("login", user.getName(),
-				PAMLoginModuleTest.NEW_PASSWORD);
+				"murks".toCharArray());
 //		try {
 //			PAMLoginModule.login("login", user.getName(),
 //					PAMLoginModuleTest.OLD_PASSWORD);
