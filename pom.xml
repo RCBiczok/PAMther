@@ -79,11 +79,6 @@
 					</execution>
 				</executions>
 			</plugin>
-		</plugins>
-	</build>
-
-	<reporting>
-		<plugins>
 			<!-- === maven-checkstyle-plugin ==========================
 			 	  Validate source code against coding style rules and 
 			 	  save result as part of report
@@ -92,12 +87,17 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
 				<version>2.8</version>
-				<configuration>
-					<configLocation>config/codingstyle/checkstyle.xml</configLocation>
-					<suppressionsLocation>config/codingstyle/suppressions.xml</suppressionsLocation>
-				</configuration>
+                                <configuration>
+                                  <configLocation>config/codingstyle/checkstyle.xml</configLocation>
+                                  <propertyExpansion>basedir=${basedir}</propertyExpansion>
+                                </configuration>
 			</plugin>
-			<!-- === maven-javadoc-plugin ***==========================
+		</plugins>
+	</build>
+
+	<reporting>
+		<plugins>
+			<!-- === maven-javadoc-plugin =============================
 			 	  Produce javadoc as part of report.
 				 ====================================================== -->
 			<plugin>
@@ -118,7 +118,7 @@
 
 	<developers>
 		<developer>
-			<id>${github.account}</id>
+			<id>${bitbucket.account}</id>
 			<name>Rudolf Biczok</name>
 			<email>rcbiczok@gmail.com</email>
 			<timezone>+1</timezone>
