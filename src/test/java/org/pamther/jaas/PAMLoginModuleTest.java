@@ -17,8 +17,6 @@ package org.pamther.jaas;
 
 import javax.security.auth.login.LoginException;
 
-import junit.framework.Assert;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -32,11 +30,30 @@ import org.pamther.test.TempUser;
  */
 public class PAMLoginModuleTest {
 
-	private static final String NAME = "pamtest";
+	/**
+	 * Dummy user name.
+	 */
+	private static final String NAME = "pamther_test";
+
+	/**
+	 * Dummy password (old).
+	 */
 	private static final char[] OLD_PASSWORD = "mop".toCharArray();
+
+	/**
+	 * Dummy password (new).
+	 */
+
 	private static final char[] NEW_PASSWORD = "new_mop".toCharArray();
+
+	/**
+	 * Dummy user.
+	 */
 	private static TempUser user;
 
+	/**
+	 * Used {@link javax.security.auth.callback.CallbackHandler} during the tests.
+	 */
 	private static DefaultCallbackHandler handler;
 
 	@BeforeClass
@@ -78,7 +95,6 @@ public class PAMLoginModuleTest {
 				PAMLoginModuleTest.NEW_PASSWORD);
 		PAMLoginModule.login("login", user.getName(),
 				PAMLoginModuleTest.NEW_PASSWORD);
-		
 //		try {
 //			PAMLoginModule.login("login", user.getName(),
 //					PAMLoginModuleTest.OLD_PASSWORD);

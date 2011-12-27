@@ -19,8 +19,8 @@ import com.sun.jna.Pointer;
 import com.sun.jna.PointerType;
 
 /**
- * Represents a handle returned by the <a
- * href="http://linux.die.net/man/3/pam_start">pam_start</a> method.
+ * Represents a native handle returned by the <a
+ * href="http://linux.die.net/man/3/pam_start">pam_start()</a> method.
  * 
  * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
  */

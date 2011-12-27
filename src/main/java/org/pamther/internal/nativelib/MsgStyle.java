@@ -16,25 +16,53 @@
 package org.pamther.internal.nativelib;
 
 /**
+ * Represents the style of an received message.
+ * 
+ * @see <a href="http://linux.die.net/man/3/pam_conv">pam_conv()</a>
  * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
  */
 public enum MsgStyle {
 
+	/**
+	 * Obtain a string without echoing any text.
+	 */
 	PAM_PROMPT_ECHO_OFF(1),
 
-	PAM_PROMPT_ECHO_ON (2),
+	/**
+	 * Obtain a string whilst echoing text.
+	 */
+	PAM_PROMPT_ECHO_ON(2),
 
+	/**
+	 * Display an error message.
+	 */
 	PAM_ERROR_MSG(3),
 
+	/**
+	 * Display some text.
+	 */
 	PAM_TEXT_INFO(4);
-	
 
+	/**
+	 * Holds the native message stype type.
+	 */
 	private int code;
-	
-	MsgStyle(int code) {
+
+	/**
+	 * Constructs a new {@link MsgStyle} instance.
+	 * 
+	 * @param code
+	 *            the native message style type code.
+	 */
+	MsgStyle(final int code) {
 		this.code = code;
 	}
-	
+
+	/**
+	 * Returns the corresponding native message style type.
+	 * 
+	 * @return the corresponding native message style type.
+	 */
 	public int getCode() {
 		return this.code;
 	}

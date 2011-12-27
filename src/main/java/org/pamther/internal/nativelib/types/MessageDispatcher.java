@@ -23,11 +23,23 @@ import org.pamther.internal.nativelib.MsgStyle;
 import org.pamther.jaas.NewPasswordCallback;
 
 /**
+ * This is the place where incoming PAM messages gets dispatched and transformed
+ * into {@link Callback} instances.
+ * 
  * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
  */
 class MessageDispatcher {
 
-	public Callback dispatch(String message, int type) {
+	/**
+	 * Transforms the given message into a {@link Callback}.
+	 * 
+	 * @param message
+	 *            the message returned by PAM module.
+	 * @param type
+	 *            the PAM message type returned by the PAM module.
+	 * @return the {@link Callback} equivalent of the given message.
+	 */
+	Callback dispatch(final String message, final int type) {
 
 		Callback callback = null;
 

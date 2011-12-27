@@ -36,8 +36,8 @@ import com.sun.jna.ptr.PointerByReference;
 /**
  * The {@link Transaction} encapsulates a PAM handle returned by pam_start and
  * is the first place for executing common PAM functions like <a
- * href="http://linux.die.net/man/3/pam_authenticate">pam_authenticate</a> or <a
- * href="http://linux.die.net/man/3/pam_acct_mgmt">pam_acct_mgmt</a>.
+ * href="http://linux.die.net/man/3/pam_authenticate">pam_authenticate()</a> or
+ * <a href="http://linux.die.net/man/3/pam_acct_mgmt">pam_acct_mgmt()</a>.
  * 
  * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
  */
@@ -74,7 +74,7 @@ public final class Transaction {
 			new NativeCallbackHandlerImp());
 
 	/**
-	 * Points the internal PAM handle.
+	 * Holds the internal PAM handle.
 	 */
 	private HandleByReference pamHandlePointer = new HandleByReference();
 
@@ -84,11 +84,15 @@ public final class Transaction {
 	 * 
 	 * @return the name of the service configuration located in the
 	 *         <code>/etc/pam.d</code> folder.
+	 * @throws LoginException
+	 *             if an error accrued during the execution of <a
+	 *             href="http://linux.die.net/man/3/pam_get_item"
+	 *             >pam_get_item()</a>.
 	 * 
 	 * @see <a href="http://linux.die.net/man/8/pam.d">PAM configuration
 	 *      files</a>
 	 */
-	public String getService() {
+	public String getService() throws LoginException {
 		return this.getItem(ItemType.PAM_SERVICE).getString(0);
 	}
 
@@ -97,11 +101,15 @@ public final class Transaction {
 	 * 
 	 * @param service
 	 *            the name of the service configuration
+	 * @throws LoginException
+	 *             if an error accrued during the execution of <a
+	 *             href="http://linux.die.net/man/3/pam_set_item"
+	 *             >pam_set_item()</a>.
 	 * 
 	 * @see <a href="http://linux.die.net/man/8/pam.d">PAM configuration
 	 *      files</a>
 	 */
-	public void setService(final String service) {
+	public void setService(final String service) throws LoginException {
 		this.setItem(ItemType.PAM_SERVICE, service);
 	}
 
@@ -109,9 +117,13 @@ public final class Transaction {
 	 * Returns the user name item.
 	 * 
 	 * @return the user name item.
+	 * @throws LoginException
+	 *             if an error accrued during the execution of <a
+	 *             href="http://linux.die.net/man/3/pam_get_item"
+	 *             >pam_get_item()</a>.
 	 * @see <a href="http://linux.die.net/man/3/pam_get_item">pam_get_item()</a>
 	 */
-	public String getUser() {
+	public String getUser() throws LoginException {
 		return this.getItem(ItemType.PAM_USER).getString(0);
 	}
 
@@ -120,9 +132,13 @@ public final class Transaction {
 	 * 
 	 * @param user
 	 *            the name of the user.
+	 * @throws LoginException
+	 *             if an error accrued during the execution of <a
+	 *             href="http://linux.die.net/man/3/pam_set_item"
+	 *             >pam_set_item()</a>.
 	 * @see <a href="http://linux.die.net/man/3/pam_set_item">pam_set_item()</a>
 	 */
-	public void setUser(final String user) {
+	public void setUser(final String user) throws LoginException {
 		this.setItem(ItemType.PAM_SERVICE, user);
 	}
 
@@ -166,8 +182,8 @@ public final class Transaction {
 	 * 
 	 * @throws LoginException
 	 *             if an error accrued during the execution of <a
-	 *             href="http://linux.die.net/man/3/pam_start">pam_start()</a>
-	 *             or callback routines.
+	 *             href="http://linux.die.net/man/3/pam_authenticate"
+	 *             >pam_authenticate()</a> or callback routines.
 	 * @see <a
 	 *      href="http://linux.die.net/man/3/pam_authenticate">pam_authenticate()</a>
 	 */
@@ -182,42 +198,101 @@ public final class Transaction {
 	 *            for passing additional options the routine.
 	 * @throws LoginException
 	 *             if an error accrued during the execution of <a
-	 *             href="http://linux.die.net/man/3/pam_start">pam_start()</a>
-	 *             or callback routines.
+	 *             href="http://linux.die.net/man/3/pam_authenticate"
+	 *             >pam_authenticate()</a> or callback routines.
 	 * @see <a
 	 *      href="http://linux.die.net/man/3/pam_authenticate">pam_authenticate()</a>
 	 */
 	private void authenticate(final int flags) throws LoginException {
 		this.dispatchReturnValue(PAMLibrary.pam_authenticate(
-				this.pamHandlePointer.getPamHandle(), flags));
+				this.pamHandlePointer.getHandle(), flags));
 	}
 
+	/**
+	 * Validates the users account.
+	 * 
+	 * @throws LoginException
+	 *             if an error accrued during the execution of <a
+	 *             href="http://linux.die.net/man/3/pam_acct_mgmt"
+	 *             >pam_acct_mgmt()</a> or callback routines.
+	 * @see <a
+	 *      href="http://linux.die.net/man/3/pam_acct_mgmt">pam_acct_mgmt()</a>
+	 */
 	public void validate() throws LoginException {
 		this.validate(0);
 	}
 
-	private void validate(int flags) throws LoginException {
+	/**
+	 * Validates the users account.
+	 * 
+	 * @param flags
+	 *            for passing additional options the routine.
+	 * @throws LoginException
+	 *             if an error accrued during the execution of <a
+	 *             href="http://linux.die.net/man/3/pam_acct_mgmt"
+	 *             >pam_acct_mgmt()</a> or callback routines.
+	 * @see <a
+	 *      href="http://linux.die.net/man/3/pam_acct_mgmt">pam_acct_mgmt()</a>
+	 */
+	private void validate(final int flags) throws LoginException {
 		this.dispatchReturnValue(PAMLibrary.pam_acct_mgmt(
-				this.pamHandlePointer.getPamHandle(), flags));
+				this.pamHandlePointer.getHandle(), flags));
 	}
 
-	public void chauthtok() throws LoginException {
-		this.chauthtok(0);
+	/**
+	 * Changes the user's authentication token.
+	 * 
+	 * @throws LoginException
+	 *             if an error accrued during the execution of <a
+	 *             href="http://linux.die.net/man/3/pam_chauthtok"
+	 *             >pam_chauthtok()</a> or callback routines.
+	 * @see <a
+	 *      href="http://linux.die.net/man/3/pam_chauthtok">pam_chauthtok()</a>
+	 */
+	public void changeAuthTok() throws LoginException {
+		this.changeAuthTok(0);
 	}
 
-	private void chauthtok(final int flags) throws LoginException {
+	/**
+	 * Changes the user's authentication token.
+	 * 
+	 * @param flags
+	 *            for passing additional options the routine.
+	 * @throws LoginException
+	 *             if an error accrued during the execution of <a
+	 *             href="http://linux.die.net/man/3/pam_chauthtok"
+	 *             >pam_chauthtok()</a> or callback routines.
+	 * @see <a
+	 *      href="http://linux.die.net/man/3/pam_chauthtok">pam_chauthtok()</a>
+	 */
+	private void changeAuthTok(final int flags) throws LoginException {
 		this.dispatchReturnValue(PAMLibrary.pam_chauthtok(
-				this.pamHandlePointer.getPamHandle(), flags));
+				this.pamHandlePointer.getHandle(), flags));
 	}
 
+	/**
+	 * Closes this transaction and cleans up native resources.
+	 * 
+	 * @throws LoginException
+	 *             if an error accrued during the execution of <a
+	 *             href="http://linux.die.net/man/3/pam_end" >pam_end()</a> or
+	 *             callback routines.
+	 * @see <a href="http://linux.die.net/man/3/pam_end">pam_end()</a>
+	 */
 	public void close() throws LoginException {
 		if (this.open) {
 			this.dispatchReturnValue(PAMLibrary.pam_end(
-					pamHandlePointer.getPamHandle(), this.state));
+					pamHandlePointer.getHandle(), this.state));
 			this.open = false;
 		}
 	}
 
+	/**
+	 * Tries to close the {@link Transaction} before it gets garbage collected.
+	 * 
+	 * @throws Throwable
+	 *             if closure was not successful.
+	 */
 	@Override
 	protected void finalize() throws Throwable {
 		try {
@@ -227,12 +302,63 @@ public final class Transaction {
 		}
 	}
 
+	/**
+	 * Returns a transaction item.
+	 * 
+	 * @param itemType
+	 *            identifies the item we want to fetch from the transaction.
+	 * @return the transaction item corresponding to the specified
+	 *         <code>itemType</code>.
+	 * @throws LoginException
+	 *             if an error accrued during the execution of <a
+	 *             href="http://linux.die.net/man/3/pam_get_item"
+	 *             >pam_get_item()</a> or callback routines.
+	 */
+	private Pointer getItem(final ItemType itemType) throws LoginException {
+		PointerByReference item = new PointerByReference();
+		this.dispatchReturnValue(PAMLibrary.pam_get_item(
+				this.pamHandlePointer.getHandle(), itemType.getCode(), item));
+		return item.getValue();
+	}
+
+	/**
+	 * Overwrites a transaction item with a string.
+	 * 
+	 * @param itemType
+	 *            identifies the item we want to fetch from the transaction.
+	 * @param value
+	 *            the new value for the item.
+	 * @throws LoginException
+	 *             if an error accrued during the execution of <a
+	 *             href="http://linux.die.net/man/3/pam_set_item"
+	 *             >pam_set_item()</a> or callback routines.
+	 */
+	private void setItem(final ItemType itemType, final String value)
+			throws LoginException {
+		this.dispatchReturnValue(PAMLibrary.pam_set_item(
+				this.pamHandlePointer.getHandle(), itemType.getCode(), value));
+	}
+
+	/**
+	 * Dispatches the return value of an executed PAM function in
+	 * {@link PAMLibrary}. It either does nothing or throws an exception
+	 * depending on the given return value. A {@link Transaction} instance will
+	 * always save the last return code.
+	 * 
+	 * @param retVal
+	 *            the return value got from a native PAM function.
+	 * @throws LoginException
+	 *             whenever the return value is not equals to
+	 *             {@link ReturnCode#PAM_SUCCESS}.
+	 * @see <a href="http://linux.die.net/man/3/pam_strerror">pam_strerror()</a>
+	 *      used to fetch a string representation which describes the error.
+	 */
 	private void dispatchReturnValue(final int retVal) throws LoginException {
 		this.state = retVal;
 		if (this.state != ReturnCode.PAM_SUCCESS.getCode()) {
 			final String message = String.format(
 					"PAM message: %s [Return code: %d]", PAMLibrary
-							.pam_strerror(pamHandlePointer.getPamHandle(),
+							.pam_strerror(pamHandlePointer.getHandle(),
 									this.state), this.state);
 			LoginException exception;
 			switch (ReturnCode.dispatch(retVal)) {
@@ -253,18 +379,6 @@ public final class Transaction {
 
 			throw exception;
 		}
-	}
-
-	private Pointer getItem(final ItemType itemType) {
-		PointerByReference item = new PointerByReference();
-		PAMLibrary.pam_get_item(this.pamHandlePointer.getPamHandle(),
-				itemType.getCode(), item);
-		return item.getValue();
-	}
-
-	private void setItem(final ItemType itemType, final String value) {
-		PAMLibrary.pam_set_item(this.pamHandlePointer.getPamHandle(),
-				itemType.getCode(), value);
 	}
 
 }

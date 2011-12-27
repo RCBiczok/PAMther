@@ -30,11 +30,30 @@ import org.pamther.test.TempUser;
  */
 public class TransactionTest {
 
-	private static final String NAME = "pamtest";
+	/**
+	 * Dummy user name.
+	 */
+	private static final String NAME = "pamther_test";
+
+	/**
+	 * Dummy password (old).
+	 */
 	private static final char[] OLD_PASSWORD = "mop".toCharArray();
+
+	/**
+	 * Dummy password (new).
+	 */
+
 	private static final char[] NEW_PASSWORD = "new_mop".toCharArray();
+
+	/**
+	 * Dummy user.
+	 */
 	private static TempUser user;
-	
+
+	/**
+	 * Used {@link CallbackHandler} during the tests.
+	 */
 	private static DefaultCallbackHandler handler;
 
 	@BeforeClass
@@ -56,7 +75,8 @@ public class TransactionTest {
 
 	@Test
 	public void haveAService() throws LoginException {
-		Transaction transaction = new Transaction("login", TransactionTest.NAME, handler);
+		Transaction transaction = new Transaction("login",
+				TransactionTest.NAME, handler);
 		Assert.assertEquals("login", transaction.getService());
 		transaction.setService("su");
 		Assert.assertEquals("su", transaction.getService());
@@ -65,7 +85,8 @@ public class TransactionTest {
 
 	@Test
 	public void login() throws LoginException {
-		Transaction transaction = new Transaction("login", TransactionTest.NAME, handler);
+		Transaction transaction = new Transaction("login",
+				TransactionTest.NAME, handler);
 		transaction.authenticate();
 		transaction.validate();
 		transaction.close();
@@ -74,35 +95,33 @@ public class TransactionTest {
 
 	@Test
 	public void setcred() throws LoginException {
-		Transaction transaction = new Transaction("login", TransactionTest.NAME, handler);
+		Transaction transaction = new Transaction("login",
+				TransactionTest.NAME, handler);
 		transaction.authenticate();
 		transaction.validate();
-		transaction.chauthtok();
+		transaction.changeAuthTok();
 		try {
-		transaction.authenticate();
-		}
-		catch (LoginException e) {
+			transaction.authenticate();
+		} catch (LoginException e) {
 			return;
-		}
-		finally {
+		} finally {
 			transaction.close();
 		}
 		Assert.fail();
 	}
-	
-//	@Test
-//	public void beCollectableByGC() throws LoginException {
-//		Transaction pam = new Transaction("login", TransactionTest.NAME, handler);
-//		pam.authenticate();
-//		pam.verify();
-//		pam.close();
-//		
-//		pam = new Transaction("login", TransactionTest.NAME, handler);
-//		pam.authenticate();
-//		pam.verify();
-//		pam.close();
-//		pam = null;
-//		
-//		System.gc();
-//	}
+
+	// @Test
+	// public void beCollectableByGC() throws LoginException {
+	// Transaction pam = new Transaction("login", TransactionTest.NAME,
+	// handler);
+	// pam.authenticate();
+	// pam.verify();
+	// pam.close();
+	// pam = new Transaction("login", TransactionTest.NAME, handler);
+	// pam.authenticate();
+	// pam.verify();
+	// pam.close();
+	// pam = null;
+	// System.gc();
+	// }
 }

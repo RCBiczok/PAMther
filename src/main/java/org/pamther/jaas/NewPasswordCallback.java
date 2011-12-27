@@ -23,17 +23,17 @@ import javax.security.auth.callback.PasswordCallback;
  * new password. <br />
  * Please note that the JAAS-API itself does not provide any mechanism for
  * changing passwords. Only PAM methods like
- * {@link org.pamther.Transaction#chauthtok() Transaction.chauthtok()}.
+ * {@link org.pamther.Transaction#changeAuthTok() Transaction.chauthtok()}.
  * 
  * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
  */
 public class NewPasswordCallback extends PasswordCallback {
 
 	/**
-	 * SVUID
+	 * SVUID.
 	 */
 	private static final long serialVersionUID = 1L;
-
+	
 	/**
 	 * Construct a {@link NewPasswordCallback} with a prompt and a boolean
 	 * specifying whether the password should be displayed as it is being typed.
@@ -42,13 +42,13 @@ public class NewPasswordCallback extends PasswordCallback {
 	 * @param echoOn
 	 *            true if the password should be displayed as it is being typed.
 	 * 
-	 * @exception IllegalArgumentException
+	 * @throws IllegalArgumentException
 	 *                if <code>prompt</code> is null or if <code>prompt</code>
 	 *                has a length of 0.
 	 * @see javax.security.auth.callback.PasswordCallback#PasswordCallback(String,
 	 *      boolean)
 	 */
-	public NewPasswordCallback(String prompt, boolean echoOn) {
+	public NewPasswordCallback(final String prompt, final boolean echoOn) {
 		super(prompt, echoOn);
 	}
 

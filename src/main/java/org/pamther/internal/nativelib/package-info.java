@@ -14,6 +14,6 @@
  *  limitations under the License.
  */
 /**
- * JNA-Interfaces and internal constants.
+ * JNA interfaces and internal constants.
  */
 package org.pamther.internal.nativelib;

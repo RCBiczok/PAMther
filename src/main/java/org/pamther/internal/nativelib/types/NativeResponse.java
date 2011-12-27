@@ -19,44 +19,79 @@ import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
 
 /**
+ * Objects of this {@link Structure} holds response information to a
+ * corresponding {@link NativeMessage}.
  * 
  * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
+ * @see <a href="http://linux.die.net/man/3/pam_conv">pam_conv</a>.
  */
 public class NativeResponse extends Structure {
 
-	private static final String[] FIELD_ORDER = new String[] { "resp",
-			"resp_retcode" };
+	/**
+	 * Holds the file order.
+	 */
+	private static final String[] FIELD_ORDER = new String[] { "resp" };
 
+	/**
+	 * Holds a {@link Pointer} to the actual (string) response.
+	 */
 	public Pointer resp;
-	public int resp_retcode;
 
+	/* No need for this field */
+	/* public int resp_retcode; */
+
+	/**
+	 * Constructs a new {@link NativeResponse} structure.
+	 */
 	public NativeResponse() {
 		super();
 		this.setFieldOrder(NativeResponse.FIELD_ORDER);
 	}
-	
-	public NativeResponse(Pointer p) {
+
+	/**
+	 * Constructs a new {@link NativeResponse} structure.
+	 * 
+	 * @param p
+	 *            {@link Pointer} to preallocated memory.
+	 */
+	public NativeResponse(final Pointer p) {
 		super(p);
 		this.setFieldOrder(NativeResponse.FIELD_ORDER);
 	}
 
-	public NativeResponse(Pointer resp, int resp_retcode) {
-		this();
-		this.resp = resp;
-		this.resp_retcode = resp_retcode;
-	}
-
+	/**
+	 * The {@link Structure.ByReference} version of {@link NativeResponse}.
+	 * 
+	 * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
+	 */
 	public static class ByReference extends NativeResponse implements
 			Structure.ByReference {
-		public ByReference(Pointer p) {
+
+		/**
+		 * Constructs a new {@link Structure.ByReference} instance of
+		 * {@link NativeResponse}.
+		 * 
+		 * @param p
+		 *            {@link Pointer} to preallocated memory.
+		 */
+		public ByReference(final Pointer p) {
 			super(p);
 		}
-		
+
+		/**
+		 * Constructs a new {@link Structure.ByReference} instance of
+		 * {@link NativeResponse}.
+		 */
 		public ByReference() {
 			super();
 		}
 	};
 
+	/**
+	 * The {@link Structure.ByValue} version of {@link NativeResponse}.
+	 * 
+	 * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
+	 */
 	public static class ByValue extends NativeResponse implements
 			Structure.ByValue {
 	};

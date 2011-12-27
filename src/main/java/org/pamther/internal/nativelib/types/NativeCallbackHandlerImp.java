@@ -25,23 +25,43 @@ import com.sun.jna.Pointer;
 import com.sun.jna.ptr.PointerByReference;
 
 /**
- * Used as bridge between the JNA callback mechanism and the JAAS interfaces.
+ * Globally used implementation of a {@link NativeCallbackHandler}. The class is
+ * responsible for the following actions:
+ * <ul>
+ * <li>Receiving PAM {@link NativeMessage NativeMessages} and transform them
+ * into JAAS {@link Callback Callbacks}.</li>
+ * <li>Passing the {@link Callback Callbacks} to the JAAS
+ * {@link CallbackHandler}.</li>NativeResponse
+ * <li>Transforming the JAAS {@link Callback Callbacks} into PAM
+ * {@link NativeResponse NativeResponses}.</li>
+ * <li>Catching exceptions thrown by the JAAS {@link CallbackHandler}.</li>
+ * </ul>
  * 
  * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
  */
-public class NativeCallbackHandlerImp implements NativeCallbackHandler {
+public final class NativeCallbackHandlerImp implements NativeCallbackHandler {
 
+	/**
+	 * The dispatcher use transform {@link NativeMessage NativeMessages} into
+	 * {@link Callback Callbacks}.
+	 */
 	private static final MessageDispatcher DISPATCHER = new MessageDispatcher();
 
 	private static final NativeResponse DUMMY_RESPONSE = new NativeResponse();
 
+	/**
+	 * Holds the JAAS {@link CallbackHandler}.
+	 */
 	private CallbackHandler handler;
-	
+
+	/**
+	 * Holds the exception recently thrown by the JAAS {@link CallbackHandler}.
+	 */
 	private Exception lastException;
-	
+
 	@Override
-	public int callback(int numMsg, PointerByReference msg,
-			PointerByReference resp, Pointer appData) {
+	public int callback(final int numMsg, final PointerByReference msg,
+			final PointerByReference resp, final Pointer appData) {
 
 		Callback[] callbacks = new Callback[numMsg];
 
@@ -87,19 +107,17 @@ public class NativeCallbackHandlerImp implements NativeCallbackHandler {
 
 	}
 
+	@Override
 	public CallbackHandler getCallbackHandler() {
 		return this.handler;
 	}
 
-	public void setCallbackHandler(CallbackHandler handler) {
-		this.handler = handler;
+	@Override
+	public void setCallbackHandler(final CallbackHandler callbackHandler) {
+		this.handler = callbackHandler;
 	}
-	
-	/**
-	 * The lastException property.
-	 *
-	 * @return the lastException
-	 */
+
+	@Override
 	public Exception getLastException() {
 		return lastException;
 	}

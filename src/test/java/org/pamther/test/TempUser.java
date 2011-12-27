@@ -22,9 +22,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sun.jna.Library;
-import com.sun.jna.Native;
-
 /**
  * This class is used to create local user accounts and prepare them for the
  * real tests.<br />
@@ -41,13 +38,27 @@ import com.sun.jna.Native;
  * 
  * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
  */
-public class TempUser {
+public final class TempUser {
 
+	/**
+	 * Default seed used for the password encryption. We create dummy users. so
+	 * its not that bad when we use non-sense seeds.
+	 */
 	private static final String DEFAULT_SEED = "ABC";
 
+	/**
+	 * The user's name.
+	 */
 	private String name;
+
+	/**
+	 * The user's password.
+	 */
 	private char[] password;
 
+	/**
+	 * Used to make sure that the user is created by ourselves.
+	 */
 	private boolean isCreated;
 
 	/**
@@ -128,10 +139,11 @@ public class TempUser {
 	 *             if something went wrong during user deletion.
 	 */
 	public void delete() {
-		if (!this.isCreated)
+		if (!this.isCreated) {
 			throw new IllegalStateException(
 					"Can only delete users created by this "
 							+ this.getClass().getSimpleName() + " instance");
+		}
 
 		List<String> command = new ArrayList<String>();
 		command.add("userdel");
@@ -140,7 +152,16 @@ public class TempUser {
 		this.isCreated = false;
 	}
 
-	private static void execAndWait(List<String> command) {
+	/**
+	 * Takes an command line command, executes it and wait for it until its
+	 * execution is finished.
+	 * 
+	 * @param command
+	 *            an array of command line arguments.
+	 * 
+	 * @throw RuntimeException if there was an error during execution.
+	 */
+	private static void execAndWait(final List<String> command) {
 		Process p = null;
 		try {
 			p = new ProcessBuilder().command(command).start();
@@ -167,7 +188,19 @@ public class TempUser {
 
 	}
 
-	private static StringBuilder dumpStream(InputStream in, StringBuilder out) {
+	/**
+	 * Dumps the stream into a {@link StringBuilder}.
+	 * 
+	 * @param in
+	 *            the {@link InputStream} we want to dump from.
+	 * @param out
+	 *            the target {@link StringBuilder} which will hold the dumped
+	 *            stuff.
+	 * @return the {@link StringBuilder} instance passed by <code>out</code>
+	 *         containing the dumped information.
+	 */
+	private static StringBuilder dumpStream(final InputStream in,
+			final StringBuilder out) {
 		String line;
 		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 		try {

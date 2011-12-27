@@ -21,23 +21,36 @@ import javax.security.auth.callback.NameCallback;
 import javax.security.auth.callback.PasswordCallback;
 
 /**
+ * The default {@link CallbackHandler} implementation used by utility methods in
+ * {@link org.pamther.jaas.PAMLoginModule PAMLoginModule}.
  * 
  * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
  */
-public class DefaultCallbackHandler implements CallbackHandler {
+public final class DefaultCallbackHandler implements CallbackHandler {
 
-	private String name;
+	/**
+	 * Holds the user name.
+	 */
+	private String user;
 
+	/**
+	 * Holds the (old) password.
+	 */
 	private char[] oldPassword;
+
+	/**
+	 * Holds the new password (only matters in
+	 * {@link org.pamther.Transaction#changeAuthTok()}).
+	 */
 	private char[] newPassword;
 
 	@Override
-	public void handle(Callback[] callbacks) {
+	public void handle(final Callback[] callbacks) {
 		for (Callback callback : callbacks) {
 			if (callback instanceof NameCallback) {
 				NameCallback nameCallback = (NameCallback) callback;
 				System.out.println(nameCallback.getPrompt());
-				nameCallback.setName(name);
+				nameCallback.setName(user);
 			}
 
 			if (callback instanceof PasswordCallback) {
@@ -58,7 +71,7 @@ public class DefaultCallbackHandler implements CallbackHandler {
 	 * @return the name
 	 */
 	public String getName() {
-		return name;
+		return user;
 	}
 
 	/**
@@ -67,8 +80,8 @@ public class DefaultCallbackHandler implements CallbackHandler {
 	 * @param name
 	 *            the name to set
 	 */
-	public void setName(String name) {
-		this.name = name;
+	public void setName(final String name) {
+		this.user = name;
 	}
 
 	/**
@@ -86,7 +99,7 @@ public class DefaultCallbackHandler implements CallbackHandler {
 	 * @param oldPassword
 	 *            the oldPassword to set
 	 */
-	public void setOldPassword(char[] oldPassword) {
+	public void setOldPassword(final char[] oldPassword) {
 		this.oldPassword = oldPassword;
 	}
 
@@ -105,7 +118,7 @@ public class DefaultCallbackHandler implements CallbackHandler {
 	 * @param newPassword
 	 *            the newPassword to set
 	 */
-	public void setNewPassword(char[] newPassword) {
+	public void setNewPassword(final char[] newPassword) {
 		this.newPassword = newPassword;
 	}
 

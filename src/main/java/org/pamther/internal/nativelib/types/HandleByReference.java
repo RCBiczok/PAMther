@@ -20,9 +20,12 @@ import com.sun.jna.ptr.PointerByReference;
 /**
  * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
  */
-public class HandleByReference extends PointerByReference {
+public final class HandleByReference extends PointerByReference {
 
-	private Handle pamHandle;
+	/**
+	 * Holds the native handler pointer.
+	 */
+	private Handle handle;
 
 	/**
 	 * Default constructor for {@link HandleByReference} object.<br/>
@@ -32,16 +35,28 @@ public class HandleByReference extends PointerByReference {
 	public HandleByReference() {
 	}
 
-	public void setPamHandle(Handle pamHandle) {
-		this.setValue(pamHandle.getPointer());
-		this.pamHandle = pamHandle;
+	/**
+	 * Sets the native PAM handle.
+	 * 
+	 * @param handle
+	 *            the native PAM handle to set.
+	 */
+	public void setHandle(final Handle handle) {
+		this.setValue(handle.getPointer());
+		this.handle = handle;
 	}
 
-	public Handle getPamHandle() {
-		if (this.pamHandle == null)
-			this.pamHandle = new Handle(this.getValue());
-		else
-			this.pamHandle.setPointer(this.getValue());
-		return pamHandle;
+	/**
+	 * Returns the native PAM handle.
+	 * 
+	 * @return the native PAM handle.
+	 */
+	public Handle getHandle() {
+		if (this.handle == null) {
+			this.handle = new Handle(this.getValue());
+		} else {
+			this.handle.setPointer(this.getValue());
+		}
+		return handle;
 	}
 }

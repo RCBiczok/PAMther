@@ -33,15 +33,15 @@ public class PermanentMemory extends Memory {
 	 *            number of <em>bytes</em> to allocate
 	 * @see com.sun.jna.Memory#Memory(long)
 	 */
-	public PermanentMemory(long size) {
+	public PermanentMemory(final long size) {
 		super(size);
 	}
 
-	/*
-	 * Uhhh this is evil hack .... (non-Javadoc)
-	 * 
+	/**
+	 * Prevents the JNA environment for freeing the allocated memory.
 	 * @see com.sun.jna.Memory#finalize()
 	 */
+	@Override
 	protected void finalize() {
 	}
 }
