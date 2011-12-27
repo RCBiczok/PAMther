@@ -28,7 +28,7 @@ import org.pamther.test.TempUser;
  * 
  * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
  */
-public class PAMLoginModuleTest {
+public final class PAMLoginModuleTest {
 
 	/**
 	 * Dummy user name.

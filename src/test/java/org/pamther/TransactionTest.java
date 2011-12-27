@@ -28,7 +28,7 @@ import org.pamther.test.TempUser;
  * 
  * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
  */
-public class TransactionTest {
+public final class TransactionTest {
 
 	/**
 	 * Dummy user name.
@@ -110,18 +110,18 @@ public class TransactionTest {
 		Assert.fail();
 	}
 
-	// @Test
-	// public void beCollectableByGC() throws LoginException {
-	// Transaction pam = new Transaction("login", TransactionTest.NAME,
-	// handler);
-	// pam.authenticate();
-	// pam.verify();
-	// pam.close();
-	// pam = new Transaction("login", TransactionTest.NAME, handler);
-	// pam.authenticate();
-	// pam.verify();
-	// pam.close();
-	// pam = null;
-	// System.gc();
-	// }
+	@Test
+	public void beCollectableByGC() throws LoginException {
+//		Transaction transaction = new Transaction("login", TransactionTest.NAME,
+//				handler);
+//		transaction.authenticate();
+//		transaction.validate();
+//		transaction.close();
+//		transaction = new Transaction("login", TransactionTest.NAME, handler);
+//		transaction.authenticate();
+//		transaction.validate();
+//		transaction.close();
+//		transaction = null;
+		System.gc();
+	}
 }

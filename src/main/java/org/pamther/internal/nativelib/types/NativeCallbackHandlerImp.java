@@ -47,6 +47,9 @@ public final class NativeCallbackHandlerImp implements NativeCallbackHandler {
 	 */
 	private static final MessageDispatcher DISPATCHER = new MessageDispatcher();
 
+	/**
+	 * TODO: Make this expendable.
+	 */
 	private static final NativeResponse DUMMY_RESPONSE = new NativeResponse();
 
 	/**
