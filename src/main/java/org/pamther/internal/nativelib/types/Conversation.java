@@ -15,6 +15,7 @@
  */
 package org.pamther.internal.nativelib.types;
 
+import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
 
 /**
@@ -26,16 +27,17 @@ import com.sun.jna.Structure;
  */
 public class Conversation extends Structure {
 
+	/* MUST BE THE FIRST IDENTIFYER HERE */
 	/**
 	 * Holds the file order.
 	 */
 	private static final String[] FIELD_ORDER = new String[] { "conv" };
 
 	/**
-	 * This dummy instance is only used to calculate the structure size.
+	 * The size of a {@link Conversation} instance in bytes.
 	 */
-	private static final Conversation DUMMY_CONVERSATION = new Conversation();
-
+	public static final int SIZE = new Conversation().size();
+	
 	/**
 	 * "conv" field holding an implemented {@link NativeCallackHandler}
 	 * instance.
@@ -55,12 +57,12 @@ public class Conversation extends Structure {
 
 	/**
 	 * Constructs a new {@link Conversation} structure.
-	 * 
+	 * @param p a {@link Pointer} to preallocated memory.
 	 * @param handler
 	 *            {@link NativeCallbackHandler} we want to use.
 	 */
-	public Conversation(final NativeCallbackHandler handler) {
-		super(new PermanentMemory(Conversation.DUMMY_CONVERSATION.size()));
+	public Conversation(final Pointer p, final NativeCallbackHandler handler) {
+		super(p);
 		this.conv = handler;
 		this.setFieldOrder(Conversation.FIELD_ORDER);
 	}

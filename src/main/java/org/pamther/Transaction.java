@@ -29,6 +29,7 @@ import org.pamther.internal.nativelib.ReturnCode;
 import org.pamther.internal.nativelib.types.Conversation;
 import org.pamther.internal.nativelib.types.HandleByReference;
 import org.pamther.internal.nativelib.types.NativeCallbackHandlerImp;
+import org.pamther.internal.nativelib.types.PermanentMemory;
 
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.PointerByReference;
@@ -71,6 +72,7 @@ public final class Transaction {
 	 * application.
 	 */
 	private final Conversation pamConverse = new Conversation(
+			new PermanentMemory(Conversation.SIZE),
 			new NativeCallbackHandlerImp());
 
 	/**

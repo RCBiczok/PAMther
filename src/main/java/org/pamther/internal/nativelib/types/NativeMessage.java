@@ -91,6 +91,5 @@ public class NativeMessage extends Structure {
 	 */
 	public static class ByValue extends NativeMessage implements
 			Structure.ByValue {
-
 	};
 }

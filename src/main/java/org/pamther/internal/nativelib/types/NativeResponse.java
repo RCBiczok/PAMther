@@ -27,10 +27,16 @@ import com.sun.jna.Structure;
  */
 public class NativeResponse extends Structure {
 
+	/* MUST BE THE FIRST IDENTIFYER HERE */
 	/**
 	 * Holds the file order.
 	 */
-	private static final String[] FIELD_ORDER = new String[] { "resp" };
+	public static final String[] FIELD_ORDER = new String[] { "resp" };
+
+	/**
+	 * The size of a {@link NativeMessage} instance in bytes.
+	 */
+	public static final int SIZE = new NativeResponse().size();
 
 	/**
 	 * Holds a {@link Pointer} to the actual (string) response.

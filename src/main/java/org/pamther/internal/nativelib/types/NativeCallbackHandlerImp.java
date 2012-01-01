@@ -48,11 +48,6 @@ public final class NativeCallbackHandlerImp implements NativeCallbackHandler {
 	private static final MessageDispatcher DISPATCHER = new MessageDispatcher();
 
 	/**
-	 * TODO: Make this expendable.
-	 */
-	private static final NativeResponse DUMMY_RESPONSE = new NativeResponse();
-
-	/**
 	 * Holds the JAAS {@link CallbackHandler}.
 	 */
 	private CallbackHandler handler;
@@ -88,7 +83,7 @@ public final class NativeCallbackHandlerImp implements NativeCallbackHandler {
 		}
 
 		final NativeResponse[] responses = (NativeResponse[]) new NativeResponse.ByReference(
-				new PermanentMemory(DUMMY_RESPONSE.size() * numMsg))
+				new PermanentMemory(NativeResponse.SIZE * numMsg))
 				.toArray(numMsg);
 		for (int i = 0; i < callbacks.length; i++) {
 			if (callbacks[i] instanceof PasswordCallback) {
