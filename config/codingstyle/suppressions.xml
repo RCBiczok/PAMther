@@ -21,7 +21,7 @@
 <suppressions>
 	<suppress files="org.pamther.internal.nativelib.PAMLibrary.java"
 		checks="MethodName" />
-	<suppress files="org.pamther.internal. nativelib.types.NativeMessage.java"
+	<suppress files="org.pamther.internal.nativelib.types.NativeMessage.java"
 		checks="MemberName" />
 	<suppress files="org.pamther.internal.nativelib.types.Conversation.java"
 		checks="VisibilityModifier" />
