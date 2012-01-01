@@ -1,5 +1,5 @@
 /*
- *  Copyright 2011 Rudolf Biczok
+ *  Copyright 2011-2012 Rudolf Biczok
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -41,6 +41,7 @@ import com.sun.jna.ptr.PointerByReference;
  */
 public final class NativeCallbackHandlerImp implements NativeCallbackHandler {
 
+	//TODO: We may schould use a SPI here.
 	/**
 	 * The dispatcher use transform {@link NativeMessage NativeMessages} into
 	 * {@link Callback Callbacks}.
