@@ -49,7 +49,6 @@ public final class DefaultCallbackHandler implements CallbackHandler {
 		for (Callback callback : callbacks) {
 			if (callback instanceof NameCallback) {
 				NameCallback nameCallback = (NameCallback) callback;
-				System.out.println(nameCallback.getPrompt());
 				nameCallback.setName(user);
 			}
 
