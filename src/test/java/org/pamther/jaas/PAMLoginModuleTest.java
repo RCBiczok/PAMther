@@ -18,6 +18,7 @@ package org.pamther.jaas;
 import javax.security.auth.login.LoginException;
 
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.pamther.DefaultCallbackHandler;
@@ -61,31 +62,30 @@ public final class PAMLoginModuleTest {
 	public void haveAStaticLoginMethod() throws LoginException {
 		PAMLoginModule.login("login", user.getName(),
 				PAMLoginModuleTest.user.getPassword());
-		//TODO: this code produces crashes after running other unit tests.
-//		try {
-//			PAMLoginModule.login("login", user.getName(),
-//					PAMLoginModuleTest.NEW_PASSWORD);
-//		} catch (LoginException e) {
-//			return;
-//		}
-//
-//		Assert.fail();
+		try {
+			PAMLoginModule.login("login", user.getName(),
+					"new_murks".toCharArray());
+		} catch (LoginException e) {
+			System.gc();
+			return;
+		}
+
+		Assert.fail();
 	}
 
 	@Test
 	public void haveAStaticMethodForChangingPassword() throws LoginException {
 		PAMLoginModule.changeCredential("login", user.getName(),
 				PAMLoginModuleTest.user.getPassword(),
-				"murks".toCharArray());
-		PAMLoginModule.login("login", user.getName(),
-				"murks".toCharArray());
-//		try {
-//			PAMLoginModule.login("login", user.getName(),
-//					PAMLoginModuleTest.OLD_PASSWORD);
-//		} catch (LoginException e) {
-//			return;
-//		}
-//
-//		Assert.fail();
+				"new_murks".toCharArray());
+		try {
+			PAMLoginModule.login("login", user.getName(),
+					PAMLoginModuleTest.user.getPassword());
+		} catch (LoginException e) {
+			System.gc();
+			return;
+		}
+
+		Assert.fail();
 	}
 }

@@ -54,8 +54,6 @@ public final class HandleByReference extends PointerByReference {
 	public Handle getHandle() {
 		if (this.handle == null) {
 			this.handle = new Handle(this.getValue());
-		} else {
-			this.handle.setPointer(this.getValue());
 		}
 		return handle;
 	}
