@@ -78,6 +78,9 @@ public abstract class TempUser {
 		if (Platform.isLinux()) {
 			return new LinuxTempUser(name, password);
 		}
+		if (Platform.isSolaris()) {
+			return new SolarisTempUser(name, password);
+		}
 		throw new RuntimeException(
 				"This platform is not supported for running tests");
 	}
@@ -165,11 +168,11 @@ public abstract class TempUser {
 			msg.append("\".\n");
 			msg.append("Error code: ");
 			msg.append(p.exitValue());
-			msg.append("\n");
-			msg.append("Standard output is:\n");
+			msg.append("\nStandard output is:\n");
 			TempUser.dumpStream(p.getInputStream(), msg);
-			msg.append("Standard error is:\n");
+			msg.append("\nStandard error is:\n");
 			TempUser.dumpStream(p.getErrorStream(), msg);
+			msg.append("\nFull command was: "+ command.toString());
 
 			throw new RuntimeException(msg.toString());
 		}
