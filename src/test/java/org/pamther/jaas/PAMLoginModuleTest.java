@@ -43,7 +43,7 @@ public final class PAMLoginModuleTest {
 
 	@BeforeClass
 	public static void creat() throws LoginException {
-		PAMLoginModuleTest.user = new TempUser("pamther_test",
+		PAMLoginModuleTest.user = TempUser.newInstance("pamther_test",
 				"murks".toCharArray());
 		PAMLoginModuleTest.user.create();
 		handler = new DefaultCallbackHandler();

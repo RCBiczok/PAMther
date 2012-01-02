@@ -43,7 +43,7 @@ public final class TransactionTest {
 
 	@BeforeClass
 	public static void creat() throws LoginException {
-		TransactionTest.user = new TempUser("pamther_test",
+		TransactionTest.user = TempUser.newInstance("pamther_test",
 				"murks".toCharArray());
 		TransactionTest.user.create();
 		handler = new DefaultCallbackHandler();

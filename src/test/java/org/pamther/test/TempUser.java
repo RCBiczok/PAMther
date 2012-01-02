@@ -19,8 +19,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.List;
+
+import com.sun.jna.Platform;
 
 /**
  * This class is used to create local user accounts and prepare them for the
@@ -38,13 +39,13 @@ import java.util.List;
  * 
  * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
  */
-public final class TempUser {
+public abstract class TempUser {
 
 	/**
 	 * Default seed used for the password encryption. We create dummy users. so
 	 * its not that bad when we use non-sense seeds.
 	 */
-	private static final String DEFAULT_SEED = "ABC";
+	protected static final String DEFAULT_SEED = "ABC";
 
 	/**
 	 * The user's name.
@@ -59,19 +60,26 @@ public final class TempUser {
 	/**
 	 * Used to make sure that the user is created by ourselves.
 	 */
-	private boolean isCreated;
+	private boolean created;
 
 	/**
-	 * Check if this platform is supported and and loads some tiny JNA
-	 * interfaces to utility functions.
+	 * Creates a new {@link TestUser} instance applicable for this platform.
+	 * 
+	 * @param name
+	 *            the user's name.
+	 * @param password
+	 *            the user's password.
+	 * @return a new {@link TestUser} instance applicable for this platform.
+	 * @throws RuntimeException
+	 *             if user ins not root user.
 	 */
-	static {
-		if (!System.getProperty("os.name").startsWith("Linux")) {
-			throw new RuntimeException(
-					"This class requires a Linux-based operating system +"
-							+ "(System.getProperty(\"os.name\") contains \""
-							+ System.getProperty("os.name") + "\")");
+	public static final TempUser newInstance(final String name,
+			final char[] password) {
+		if (Platform.isLinux()) {
+			return new LinuxTempUser(name, password);
 		}
+		throw new RuntimeException(
+				"This platform is not supported for running tests");
 	}
 
 	/**
@@ -81,14 +89,8 @@ public final class TempUser {
 	 *            the user's name.
 	 * @param password
 	 *            the user's password.
-	 * @throws RuntimeException
-	 *             if user ins not root user.
 	 */
-	public TempUser(final String name, final char[] password) {
-		// if (TempUser.CLIB.geteuid() != 0) {
-		if (POSIXLibrary.geteuid() != 0) {
-			throw new RuntimeException("Caller must be root");
-		}
+	TempUser(final String name, final char[] password) {
 		this.name = name;
 		this.password = password;
 	}
@@ -98,7 +100,7 @@ public final class TempUser {
 	 * 
 	 * @return the user's name.
 	 */
-	public String getName() {
+	public final String getName() {
 		return name;
 	}
 
@@ -107,7 +109,7 @@ public final class TempUser {
 	 * 
 	 * @return the user password.
 	 */
-	public char[] getPassword() {
+	public final char[] getPassword() {
 		return password;
 	}
 
@@ -117,16 +119,9 @@ public final class TempUser {
 	 * @throws RuntimeException
 	 *             if something went wrong during user creation.
 	 */
-	public void create() {
-		List<String> command = new ArrayList<String>();
-		command.add("useradd");
-		command.add(this.name);
-		command.add("-p");
-		command.add(CryptLibrary.crypt(new String(password),
-				TempUser.DEFAULT_SEED));
-		command.add("-M");
-		TempUser.execAndWait(command);
-		this.isCreated = true;
+	public final void create() {
+		this.performCreation();
+		this.created = true;
 	}
 
 	/**
@@ -138,18 +133,11 @@ public final class TempUser {
 	 * @throws RuntimeException
 	 *             if something went wrong during user deletion.
 	 */
-	public void delete() {
-		if (!this.isCreated) {
-			throw new IllegalStateException(
-					"Can only delete users created by this "
-							+ this.getClass().getSimpleName() + " instance");
+	public final void delete() {
+		if (this.created) {
+			this.performDeletion();
+			this.created = false;
 		}
-
-		List<String> command = new ArrayList<String>();
-		command.add("userdel");
-		command.add(this.name);
-		TempUser.execAndWait(command);
-		this.isCreated = false;
 	}
 
 	/**
@@ -161,7 +149,7 @@ public final class TempUser {
 	 * 
 	 * @throw RuntimeException if there was an error during execution.
 	 */
-	private static void execAndWait(final List<String> command) {
+	protected static void execAndWait(final List<String> command) {
 		Process p = null;
 		try {
 			p = new ProcessBuilder().command(command).start();
@@ -215,4 +203,15 @@ public final class TempUser {
 
 		return out;
 	}
+
+	/**
+	 * Performs the platform specific user creation.
+	 */
+	public abstract void performCreation();
+
+	/**
+	 * performs the platform specific user deletion.
+	 */
+	public abstract void performDeletion();
+
 }
