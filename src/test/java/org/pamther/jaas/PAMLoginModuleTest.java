@@ -44,12 +44,12 @@ public final class PAMLoginModuleTest {
 	@BeforeClass
 	public static void creat() throws LoginException {
 		PAMLoginModuleTest.user = TempUser.newInstance("pamther_test",
-				"murks".toCharArray());
+				"murkspwd01".toCharArray());
 		PAMLoginModuleTest.user.create();
 		handler = new DefaultCallbackHandler();
 		handler.setName(PAMLoginModuleTest.user.getName());
-		handler.setOldPassword("murks".toCharArray());
-		handler.setNewPassword("new_murks".toCharArray());
+		handler.setOldPassword("murkspwd01".toCharArray());
+		handler.setNewPassword("new_murkspwd01".toCharArray());
 	}
 
 	@AfterClass
@@ -60,11 +60,11 @@ public final class PAMLoginModuleTest {
 
 	@Test
 	public void haveAStaticLoginMethod() throws LoginException {
-		PAMLoginModule.login("login", user.getName(),
+		PAMLoginModule.login("su", user.getName(),
 				PAMLoginModuleTest.user.getPassword());
 		try {
-			PAMLoginModule.login("login", user.getName(),
-					"new_murks".toCharArray());
+			PAMLoginModule.login("su", user.getName(),
+					"99BottleOfBear".toCharArray());
 		} catch (LoginException e) {
 			System.gc();
 			return;
@@ -75,11 +75,12 @@ public final class PAMLoginModuleTest {
 
 	@Test
 	public void haveAStaticMethodForChangingPassword() throws LoginException {
-		PAMLoginModule.changeCredential("login", user.getName(),
+		PAMLoginModule.changeCredential("su", user.getName(),
 				PAMLoginModuleTest.user.getPassword(),
-				"new_murks".toCharArray());
+				"99BottleOfBear".toCharArray());
+		PAMLoginModule.login("su", user.getName(), "99BottleOfBear".toCharArray());
 		try {
-			PAMLoginModule.login("login", user.getName(),
+			PAMLoginModule.login("su", user.getName(),
 					PAMLoginModuleTest.user.getPassword());
 		} catch (LoginException e) {
 			System.gc();

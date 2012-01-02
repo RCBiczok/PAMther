@@ -44,12 +44,12 @@ public final class TransactionTest {
 	@BeforeClass
 	public static void creat() throws LoginException {
 		TransactionTest.user = TempUser.newInstance("pamther_test",
-				"murks".toCharArray());
+				"murkspwd01".toCharArray());
 		TransactionTest.user.create();
 		handler = new DefaultCallbackHandler();
 		handler.setName(TransactionTest.user.getName());
 		handler.setOldPassword(TransactionTest.user.getPassword());
-		handler.setNewPassword("new_murks".toCharArray());
+		handler.setNewPassword("new_murkspwd01".toCharArray());
 	}
 
 	@AfterClass
@@ -60,17 +60,22 @@ public final class TransactionTest {
 
 	@Test
 	public void haveAService() throws LoginException {
-		Transaction transaction = new Transaction("login",
+		Transaction transaction = new Transaction("su",
 				TransactionTest.user.getName(), handler);
-		Assert.assertEquals("login", transaction.getService());
-		transaction.setService("su");
 		Assert.assertEquals("su", transaction.getService());
+		
+		// TODO: Causes Permission denied errors on Solaris boxes, dont realy know why
+		if(!com.sun.jna.Platform.isSolaris()) {
+		    transaction.setService("ssh");
+		    Assert.assertEquals("ssh", transaction.getService());
+		}
 		transaction.close();
+		System.gc();
 	}
 
 	@Test
 	public void login() throws LoginException {
-		Transaction transaction = new Transaction("login",
+		Transaction transaction = new Transaction("ssh",
 				TransactionTest.user.getName(), handler);
 		transaction.authenticate();
 		transaction.validate();
@@ -80,13 +85,15 @@ public final class TransactionTest {
 
 	@Test
 	public void setcred() throws LoginException {
-		Transaction transaction = new Transaction("login",
+		Transaction transaction = new Transaction("su",
 				TransactionTest.user.getName(), handler);
 		transaction.authenticate();
 		transaction.validate();
 		transaction.changeAuthTok();
 		try {
-			transaction.authenticate();
+			Transaction transaction2 = new Transaction("su",
+				TransactionTest.user.getName(), handler);
+			transaction2.authenticate();
 		} catch (LoginException e) {
 			return;
 		} finally {

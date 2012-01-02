@@ -65,9 +65,8 @@ public final class NativeCallbackHandlerImp implements NativeCallbackHandler {
 		Callback[] callbacks = new Callback[numMsg];
 
 		for (int i = 0; i < numMsg; i++) {
-			// TODO: Test this on Solaris machines.
 			NativeMessage message = new NativeMessage(msg.getPointer()
-					.getPointer(i));
+					.getPointer(com.sun.jna.Native.POINTER_SIZE*i));
 			callbacks[i] = NativeCallbackHandlerImp.DISPATCHER.dispatch(
 					message.msg, message.msg_style);
 		}

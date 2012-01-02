@@ -20,6 +20,8 @@ import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.NameCallback;
 import javax.security.auth.callback.PasswordCallback;
 
+import org.pamther.jaas.NewPasswordCallback;
+
 /**
  * The default {@link CallbackHandler} implementation used by utility methods in
  * {@link org.pamther.jaas.PAMLoginModule PAMLoginModule}.
@@ -54,7 +56,7 @@ public final class DefaultCallbackHandler implements CallbackHandler {
 
 			if (callback instanceof PasswordCallback) {
 				PasswordCallback passwordCallback = (PasswordCallback) callback;
-				if (passwordCallback.getPrompt().contains("new UNIX")) {
+				if (passwordCallback instanceof NewPasswordCallback) {
 					passwordCallback.setPassword(this.newPassword);
 				} else {
 					passwordCallback.setPassword(this.oldPassword);
