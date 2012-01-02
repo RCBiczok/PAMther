@@ -172,7 +172,7 @@ public abstract class TempUser {
 			TempUser.dumpStream(p.getInputStream(), msg);
 			msg.append("\nStandard error is:\n");
 			TempUser.dumpStream(p.getErrorStream(), msg);
-			msg.append("\nFull command was: "+ command.toString());
+			msg.append("\nFull command was: " + command.toString());
 
 			throw new RuntimeException(msg.toString());
 		}
