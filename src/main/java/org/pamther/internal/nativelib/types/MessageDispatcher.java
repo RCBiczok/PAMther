@@ -18,6 +18,7 @@ package org.pamther.internal.nativelib.types;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.NameCallback;
 import javax.security.auth.callback.PasswordCallback;
+import javax.security.auth.callback.TextOutputCallback;
 
 import org.pamther.internal.nativelib.MsgStyle;
 import org.pamther.jaas.NewPasswordCallback;
@@ -47,11 +48,15 @@ class MessageDispatcher {
 			callback = new PasswordCallback(message,
 					type == MsgStyle.PAM_PROMPT_ECHO_ON.getCode());
 		} else if (message.equals("Enter new UNIX password: ")
-				|| message.equals("Retype new UNIX password: ")) {
+			   || message.equals("Retype new UNIX password: ") || message.equals("New Password: ") || message.equals("Re-enter new Password: ")) {
 			callback = new NewPasswordCallback(message,
 					type == MsgStyle.PAM_PROMPT_ECHO_ON.getCode());
 		} else if (message.equals("login: ")) {
 			callback = new NameCallback(message);
+		} else if (type == MsgStyle.PAM_ERROR_MSG.getCode()) {
+		    callback = new TextOutputCallback(TextOutputCallback.ERROR, message);
+		} else if (type == MsgStyle.PAM_TEXT_INFO.getCode()) {
+		    callback = new TextOutputCallback(TextOutputCallback.INFORMATION, message);
 		}
 
 		return callback;
