@@ -23,6 +23,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.pamther.test.TempUser;
 
+import com.sun.jna.Platform;
+
 /**
  * The class {@link PAMService} should ...
  * 
@@ -60,14 +62,16 @@ public final class TransactionTest {
 
 	@Test
 	public void haveAService() throws LoginException {
-		Transaction transaction = new Transaction("su",
+		Transaction transaction = new Transaction("ssh",
 				TransactionTest.user.getName(), handler);
-		Assert.assertEquals("su", transaction.getService());
-		
-		// TODO: Causes Permission denied errors on Solaris boxes, dont realy know why
-		if(!com.sun.jna.Platform.isSolaris()) {
-		    transaction.setService("ssh");
-		    Assert.assertEquals("ssh", transaction.getService());
+		Assert.assertEquals("ssh", transaction.getService());
+		/*
+		 * TODO: Causes Permission denied errors on Solaris
+		 * boxes, don't really know why.
+		 */
+		if (!Platform.isSolaris()) {
+		    transaction.setService("su");
+		    Assert.assertEquals("su", transaction.getService());
 		}
 		transaction.close();
 		System.gc();
@@ -85,13 +89,13 @@ public final class TransactionTest {
 
 	@Test
 	public void setcred() throws LoginException {
-		Transaction transaction = new Transaction("su",
+		Transaction transaction = new Transaction("ssh",
 				TransactionTest.user.getName(), handler);
 		transaction.authenticate();
 		transaction.validate();
 		transaction.changeAuthTok();
 		try {
-			Transaction transaction2 = new Transaction("su",
+			Transaction transaction2 = new Transaction("ssh",
 				TransactionTest.user.getName(), handler);
 			transaction2.authenticate();
 		} catch (LoginException e) {

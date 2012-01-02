@@ -60,10 +60,10 @@ public final class PAMLoginModuleTest {
 
 	@Test
 	public void haveAStaticLoginMethod() throws LoginException {
-		PAMLoginModule.login("su", user.getName(),
+		PAMLoginModule.login("ssh", user.getName(),
 				PAMLoginModuleTest.user.getPassword());
 		try {
-			PAMLoginModule.login("su", user.getName(),
+			PAMLoginModule.login("ssh", user.getName(),
 					"99BottleOfBear".toCharArray());
 		} catch (LoginException e) {
 			System.gc();
@@ -75,12 +75,12 @@ public final class PAMLoginModuleTest {
 
 	@Test
 	public void haveAStaticMethodForChangingPassword() throws LoginException {
-		PAMLoginModule.changeCredential("su", user.getName(),
+		PAMLoginModule.changeCredential("ssh", user.getName(),
 				PAMLoginModuleTest.user.getPassword(),
 				"99BottleOfBear".toCharArray());
-		PAMLoginModule.login("su", user.getName(), "99BottleOfBear".toCharArray());
+		PAMLoginModule.login("ssh", user.getName(), "99BottleOfBear".toCharArray());
 		try {
-			PAMLoginModule.login("su", user.getName(),
+			PAMLoginModule.login("ssh", user.getName(),
 					PAMLoginModuleTest.user.getPassword());
 		} catch (LoginException e) {
 			System.gc();
