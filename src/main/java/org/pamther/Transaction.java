@@ -159,7 +159,6 @@ public final class Transaction {
 	 *             if an error accrued during the execution of <a
 	 *             href="http://linux.die.net/man/3/pam_start">pam_start()</a>
 	 *             or callback routines.
-	 * @see {@link Transaction#Transaction(String)}
 	 */
 	public Transaction(final String service, final String user,
 			final CallbackHandler handler) throws LoginException {

@@ -23,7 +23,7 @@ import com.sun.jna.Structure;
  * module.
  * 
  * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
- * @see <a href="http://linux.die.net/man/3/pam_conv">pam_conv</a>.
+ * @see <a href="http://linux.die.net/man/3/pam_conv">pam_conv</a>
  */
 public class NativeMessage extends Structure {
 
@@ -76,7 +76,7 @@ public class NativeMessage extends Structure {
 	}
 
 	/**
-	 * The {@link Structure.ByReference} version of {@link NativeMessage}.
+	 * The {@link com.sun.jna.Structure.ByReference} version of {@link NativeMessage}.
 	 * 
 	 * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
 	 */
@@ -85,7 +85,7 @@ public class NativeMessage extends Structure {
 	};
 
 	/**
-	 * The {@link Structure.ByValue} version of {@link NativeMessage}.
+	 * The {@link com.sun.jna.Structure.ByValue} version of {@link NativeMessage}.
 	 * 
 	 * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
 	 */

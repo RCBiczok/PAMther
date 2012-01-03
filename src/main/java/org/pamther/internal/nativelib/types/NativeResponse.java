@@ -23,7 +23,7 @@ import com.sun.jna.Structure;
  * corresponding {@link NativeMessage}.
  * 
  * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
- * @see <a href="http://linux.die.net/man/3/pam_conv">pam_conv</a>.
+ * @see <a href="http://linux.die.net/man/3/pam_conv">pam_conv</a>
  */
 public class NativeResponse extends Structure {
 
@@ -66,7 +66,7 @@ public class NativeResponse extends Structure {
 	}
 
 	/**
-	 * The {@link Structure.ByReference} version of {@link NativeResponse}.
+	 * The {@link com.sun.jna.Structure.ByReference} version of {@link NativeResponse}.
 	 * 
 	 * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
 	 */
@@ -74,7 +74,7 @@ public class NativeResponse extends Structure {
 			Structure.ByReference {
 
 		/**
-		 * Constructs a new {@link Structure.ByReference} instance of
+		 * Constructs a new {@link com.sun.jna.Structure.ByReference} instance of
 		 * {@link NativeResponse}.
 		 * 
 		 * @param p
@@ -85,7 +85,7 @@ public class NativeResponse extends Structure {
 		}
 
 		/**
-		 * Constructs a new {@link Structure.ByReference} instance of
+		 * Constructs a new {@link com.sun.jna.Structure.ByReference} instance of
 		 * {@link NativeResponse}.
 		 */
 		public ByReference() {
@@ -94,7 +94,7 @@ public class NativeResponse extends Structure {
 	};
 
 	/**
-	 * The {@link Structure.ByValue} version of {@link NativeResponse}.
+	 * The {@link com.sun.jna.Structure.ByValue} version of {@link NativeResponse}.
 	 * 
 	 * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
 	 */

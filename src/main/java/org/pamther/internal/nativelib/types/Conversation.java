@@ -22,8 +22,8 @@ import com.sun.jna.Structure;
  * Objects of this {@link Structure} act as a bridge between the caller and the
  * underlying PAM module.
  * 
- * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
- * @see <a href="http://linux.die.net/man/3/pam_conv">pam_conv</a>.
+ * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>.
+ * @see <a href="http://linux.die.net/man/3/pam_conv">pam_conv files</a>
  */
 public class Conversation extends Structure {
 
@@ -37,9 +37,9 @@ public class Conversation extends Structure {
 	 * The size of a {@link Conversation} instance in bytes.
 	 */
 	public static final int SIZE = new Conversation().size();
-	
+
 	/**
-	 * "conv" field holding an implemented {@link NativeCallackHandler}
+	 * "conv" field holding an implemented {@link NativeCallbackHandler}
 	 * instance.
 	 */
 	public NativeCallbackHandler conv;
@@ -57,9 +57,11 @@ public class Conversation extends Structure {
 
 	/**
 	 * Constructs a new {@link Conversation} structure.
-	 * @param p a {@link Pointer} to preallocated memory.
+	 * 
+	 * @param p
+	 *            a {@link Pointer} to preallocated memory.
 	 * @param handler
-	 *            {@link NativeCallbackHandler} we want to use.
+	 *            the {@link org.pamther.internal.nativelib.types.NativeCallbackHandler} we want to use.
 	 */
 	public Conversation(final Pointer p, final NativeCallbackHandler handler) {
 		super(p);
@@ -68,7 +70,7 @@ public class Conversation extends Structure {
 	}
 
 	/**
-	 * The {@link Structure.ByReference} version of {@link Conversation}.
+	 * The {@link com.sun.jna.Structure.ByReference} version of {@link Conversation}.
 	 * 
 	 * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
 	 */
@@ -77,7 +79,7 @@ public class Conversation extends Structure {
 	};
 
 	/**
-	 * The {@link Structure.ByValue} version of {@link Conversation}.
+	 * The {@link com.sun.jna.Structure.ByValue} version of {@link Conversation}.
 	 * 
 	 * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
 	 */

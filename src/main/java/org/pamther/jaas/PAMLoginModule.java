@@ -26,16 +26,18 @@ import org.pamther.DefaultCallbackHandler;
 import org.pamther.Transaction;
 
 /**
- * This is an implementation of the JAAS {@link LoginModule} interface. PAM
- * messages generated from the individual PAM modules get transformed into
- * corresponding {@link Callback} objects hence the {@link CallbackHandler} can
- * interact with these messages directly.<br />
+ * This is an implementation of the JAAS
+ * {@link javax.security.auth.spi.LoginModule} interface. PAM messages generated
+ * from the individual PAM modules get transformed into corresponding
+ * {@link javax.security.auth.callback.Callback} objects hence the
+ * {@link javax.security.auth.callback.CallbackHandler} can interact with these
+ * messages directly.<br />
  * <br />
  * Static methods for basic authentication ad password manipulation are also
  * part of this class.
  * 
  * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
- * @see The {@link Transaction} class.
+ * @see org.pamther.Transaction
  */
 public final class PAMLoginModule implements LoginModule {
 
@@ -45,7 +47,7 @@ public final class PAMLoginModule implements LoginModule {
 	private static final String SERVICE_NAME = "serviceName";
 
 	/**
-	 * The used {@link CallbackHandler} for PAM module interaction.
+	 * The used {@link javax.security.auth.callback.CallbackHandler} for PAM module interaction.
 	 */
 	private CallbackHandler handler;
 
@@ -55,7 +57,7 @@ public final class PAMLoginModule implements LoginModule {
 	private Map<String, ?> opts;
 
 	/**
-	 * Holds the internally used {@link Transaction} object.
+	 * Holds the internally used {@link org.pamther.Transaction} object.
 	 */
 	private Transaction transaction;
 

@@ -49,7 +49,7 @@ public final class PAMLibrary {
 	 * @param pamConverse
 	 *            the PAM conversation structure holding the callback function.
 	 * @param pamHandle
-	 *            a JNA {@link Pointer} which will keep the native handler.
+	 *            a JNA {@link com.sun.jna.Pointer} which will keep the native handler.
 	 * @return an integer value identifying an error message or a successful
 	 *         invocation.
 	 * @see <a href="http://linux.die.net/man/3/pam_start">pam_start()</a>

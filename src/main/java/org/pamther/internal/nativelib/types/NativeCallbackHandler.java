@@ -27,7 +27,7 @@ import com.sun.jna.ptr.PointerByReference;
  * callback mechanism.
  * 
  * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
- * @see <a href="http://linux.die.net/man/3/pam_conv">pam_conv</a>.
+ * @see <a href="http://linux.die.net/man/3/pam_conv">pam_conv</a>
  */
 public interface NativeCallbackHandler extends Callback {
 
@@ -37,14 +37,19 @@ public interface NativeCallbackHandler extends Callback {
 	 * @param numMsg
 	 *            number of messages.
 	 * @param msg
-	 *            an array of {@link NativeMessage}. (Or an array of pointer of
-	 *            {@link NativeMessage}, depending on the OS).
+	 *            an array of
+	 *            {@link NativeMessage}.
+	 *            (Or an array of pointer of
+	 *            {@link NativeMessage},
+	 *            depending on the OS).
 	 * @param resp
-	 *            an array of {@link NativeResponce}.
+	 *            an array of
+	 *            {@link NativeResponse}.
 	 * @param appData
 	 *            additional application-specific data.
-	 * @return {@link ReturnCodePAM_BUF_ERR
-
+	 * @return {@link org.pamther.internal.nativelib.ReturnCode#PAM_CONV_ERR} if
+	 *         the {@link CallbackHandler} throws an exception, otherwise
+	 *         {@link org.pamther.internal.nativelib.ReturnCode#PAM_SUCCESS}
 	 */
 	int callback(final int numMsg, final PointerByReference msg,
 			final PointerByReference resp, final Pointer appData);
