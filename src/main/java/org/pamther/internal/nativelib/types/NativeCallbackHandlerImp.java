@@ -21,6 +21,7 @@ import javax.security.auth.callback.PasswordCallback;
 
 import org.pamther.internal.nativelib.ReturnCode;
 
+import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.PointerByReference;
 
@@ -66,11 +67,9 @@ public final class NativeCallbackHandlerImp implements NativeCallbackHandler {
 
 		for (int i = 0; i < numMsg; i++) {
 			NativeMessage message = new NativeMessage(msg.getPointer()
-					.getPointer(com.sun.jna.Native.POINTER_SIZE * i));
+					.getPointer(Native.POINTER_SIZE * i));
 			callbacks[i] = NativeCallbackHandlerImp.DISPATCHER.dispatch(
 					message.msg, message.msg_style);
-			System.out.println(callbacks[i]);
-			System.out.println(message.msg);
 		}
 
 		/*
@@ -97,7 +96,6 @@ public final class NativeCallbackHandlerImp implements NativeCallbackHandler {
 					password.setChar(j, passwordCallback.getPassword()[j]);
 				}
 				responses[i].resp = password;
-				System.out.println(new String(passwordCallback.getPassword()));
 				passwordCallback.clearPassword();
 			}
 			responses[i].setAutoSynch(true);
