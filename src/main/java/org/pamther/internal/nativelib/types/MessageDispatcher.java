@@ -31,6 +31,10 @@ import org.pamther.jaas.NewPasswordCallback;
  */
 class MessageDispatcher {
 
+	/*
+	 * TODO: Need to be optimized: May search for key words, convert always
+	 * messages PasswordCallback's if type is PAM_PROMPT_ECHO_ON
+	 */
 	/**
 	 * Transforms the given message into a {@link Callback}.
 	 * 
