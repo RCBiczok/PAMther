@@ -10,9 +10,12 @@ PAM itself is a native authentication stack and is commonly used in nearly every
 * Direct interaction with PAM modules via JAAS Callback mechanism.
 * Mechanism for changing users authentication token.
 
+# Tested platforms #
+* Linux (Ubuntu 11.10 x64)
+* Solaris (v11 x64)
+
 # Examples #
-Just have a look at the [unit tests]
-(https://bitbucket.org/RCBiczok/pamther/src/72201c44165d/src/test/java/org/pamther/jaas/PAMLoginModuleTest.java 
+Just have a look at the [unit tests](https://bitbucket.org/RCBiczok/pamther/src/72201c44165d/src/test/java/org/pamther/jaas/PAMLoginModuleTest.java 
 "JAAS login module unit test").
 
 # Download #
