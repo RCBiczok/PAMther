@@ -1,4 +1,4 @@
-![PAMther logo](https://bitbucket.org/RCBiczok/pamther/raw/07b13f9619a1/logo.png "PAMther Logo")
+![PAMther logo](https://github.com/RCBiczok/PAMther/raw/master/logo.png "PAMther Logo")
 # PAMther in a nutshell #
 PAMther aims to be a pure Java interface to the Unix [PAM](http://linux.die.net/man/5/pam 
 "PAM documentation") API (Pluggable Authentication Modules).
@@ -15,11 +15,11 @@ PAM itself is a native authentication stack and is commonly used in nearly every
 * Solaris (v11 x64)
 
 # Examples #
-Just have a look at the [unit tests](https://bitbucket.org/RCBiczok/pamther/src/72201c44165d/src/test/java/org/pamther/jaas/PAMLoginModuleTest.java 
+Just have a look at the [unit tests](https://github.com/RCBiczok/PAMther/blob/master/src/test/java/org/pamther/jaas/PAMLoginModuleTest.java 
 "JAAS login module unit test").
 
 # Download #
-See [download section](https://bitbucket.org/RCBiczok/pamther/downloads "Download section").
+See [download section](https://github.com/RCBiczok/PAMther/downloads "Download section").
 
 # License #
 This library is provided under the [Apache 2](http://www.apache.org/licenses/LICENSE-2.0.html "License file") license.
