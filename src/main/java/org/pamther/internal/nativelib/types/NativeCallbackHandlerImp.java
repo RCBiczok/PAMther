@@ -38,7 +38,8 @@ import com.sun.jna.ptr.PointerByReference;
  * <li>Catching exceptions thrown by the JAAS {@link CallbackHandler}.</li>
  * </ul>
  * 
- * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a>
+ * @author <a href="https://bitbucket.org/RCBiczok">Rudolf Biczok</a> Creator.
+ * @author <a href="i.kats@dkfz.de">Ilia Kats</a> Fixed calculation of allocated memory.
  */
 public final class NativeCallbackHandlerImp implements NativeCallbackHandler {
 
@@ -91,7 +92,9 @@ public final class NativeCallbackHandlerImp implements NativeCallbackHandler {
 			if (callbacks[i] instanceof PasswordCallback) {
 				final PasswordCallback passwordCallback = (PasswordCallback) callbacks[i];
 				PermanentMemory password = new PermanentMemory(
-						passwordCallback.getPassword().length * Character.SIZE);
+						passwordCallback.getPassword().length * Character.SIZE
+								/ 8 + 1);
+				password.clear();
 				for (int j = 0; j < passwordCallback.getPassword().length; j++) {
 					password.setChar(j, passwordCallback.getPassword()[j]);
 				}
