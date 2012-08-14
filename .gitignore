@@ -1,1 +1,9 @@
-/target
+#Eclipse IDE files
+.settings
+.project
+.classpath
+.checkstyle
+.pmd
+
+#Build intermediates
+target
